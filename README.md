@@ -55,6 +55,38 @@ python3 -m http.server 5500
 
 - `http://127.0.0.1:5500/library.html`
 
+## Гайд на запуск (каждый раз)
+
+Если зависимости уже установлены, достаточно этих шагов:
+
+1. Backend (терминал 1):
+
+```bash
+cd "/Users/kirill/Documents/Code/BookVerse (3)"
+source .venv/bin/activate
+export BOOKVERSE_DISABLE_AUTH=true
+export BOOKVERSE_ALGO_ONLY=true
+uvicorn server:app --host 127.0.0.1 --port 8000
+```
+
+2. Frontend (терминал 2):
+
+```bash
+cd "/Users/kirill/Documents/Code/BookVerse (3)"
+python3 -m http.server 5500
+```
+
+3. Открыть сайт:
+
+- `http://127.0.0.1:5500/index.html`
+
+4. Если порт `8000` занят:
+
+```bash
+lsof -nP -iTCP:8000 -sTCP:LISTEN
+kill <PID>
+```
+
 ## Как пользоваться (по заданию)
 
 1. В библиотеке загрузите книгу (лучше `.txt`).
