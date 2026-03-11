@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>BookVerse - Моя библиотека</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Подключаем CSS файлы -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles/settings.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><text y='1em' font-size='2em'>📚</text></svg>">
+</head>
+<body class="white-theme">
+    <!-- Навигация -->
+    <nav class="main-nav glass-effect">
+        <div class="nav-brand">
+            <span class="logo-icon">📚</span>
+            <h1 class="logo-text">BookVerse</h1>
+        </div>
+        
+        <div class="nav-actions">
+            <button class="fab-btn primary" id="uploadButton" title="Добавить книгу">
+                <span class="icon-text">＋</span>
+            </button>
+            <button class="nav-btn with-icon" id="menuButton">
+                <span class="icon-text">☰</span>
+                Меню
+            </button>
+        </div>
+    </nav>
+
+    <!-- Основной контент -->
+    <main class="content-wrapper">
+        <!-- Заголовок и управление -->
+        <header class="content-header">
+            <div class="header-group">
+                <h2 class="page-title">Моя библиотека</h2>
+                <div class="sort-filter">
+                    <select class="dropdown" id="sort-by">
+                        <option value="date">Сортировка по дате</option>
+                        <option value="title">По названию</option>
+                        <option value="progress">По прогрессу</option>
+                    </select>
+                    <div class="search-bar">
+                        <input type="text" placeholder="Поиск по книгам...">
+                        <span class="search-icon">🔍</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Сетка книг -->
+        <section class="books-grid" id="books-grid">
+            <!-- Контент будет добавлен через JavaScript -->
+        </section>
+    </main>
+
+    <!-- Боковая панель -->
+    <aside class="side-panel" id="right-panel">
+        <div class="panel-content">
+            <div class="panel-header">
+                <div class="user-profile">
+                    <div class="avatar">👤</div>
+                    <div class="user-info">
+                        <h3 class="username">${localStorage.getItem('username')}</h3>
+                        <p class="user-email">${localStorage.getItem('userEmail')}</p>
+                    </div>
+                </div>
+                <button class="icon-btn close-btn" id="closeBtn">✕</button>
+            </div>
+            
+            <nav class="panel-nav">
+                <ul class="menu-list">
+                    <li>
+                        <button class="menu-item" onclick="showToolList()">
+                            <span class="icon">🧠</span>
+                            <span class="text">Инструменты</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button class="menu-item" onclick="openSettings()">
+                            <span class="icon">⚙️</span>
+                            <span class="text">Настройки</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="logout-section">
+                <button class="menu-item logout-btn" onclick="logout()">
+                    <span class="icon">🚪</span>
+                    <span class="text">Выйти</span>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Модальное окно загрузки -->
+    <div class="modal-overlay" id="upload-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Новая книга</h3>
+                <button class="icon-btn" id="closeModalBtn">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-zone" id="drop-zone">
+                    <input type="file" id="file-input" accept=".fb2,.txt">
+                    <label for="file-input" class="upload-label">
+                        <div class="upload-icon">📤</div>
+                        <p>Перетащите файлы сюда<br>или нажмите для выбора</p>
+                        <span class="file-types">Поддерживаемые форматы: FB2, TXT</span>
+                    </label>
+                </div>
+                <div class="upload-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <span class="progress-text">0%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Скрипты -->
+    <script src="scripts/main.js?v=20260309b" type="module"></script>
+    <script type="module" src="scripts/menu.js?v=20260309b"></script>
+    <script src="scripts/auth.js?v=20260309b"></script>
+    <script type="module" src="scripts/settings.js?v=20260309b"></script>
+    <script type="module" src="scripts/aiTools.js?v=20260309c"></script>
+    <script type="module" src="scripts/contextMenu.js?v=20260309b"></script>
+    <script type="module">
+        import { toggleMenu, toggleUpload } from './scripts/utils.js';
+        
+        // Добавляем обработчики после загрузки DOM
+        document.addEventListener('DOMContentLoaded', () => {
+            // Кнопки для загрузки
+            ['uploadButton', 'uploadCtaBtn', 'closeModalBtn'].forEach(id => {
+                const button = document.getElementById(id);
+                if (button) {
+                    button.addEventListener('click', toggleUpload);
+                }
+            });
+
+            // Кнопки для меню
+            ['menuButton', 'closeBtn'].forEach(id => {
+                const button = document.getElementById(id);
+                if (button) {
+                    button.addEventListener('click', toggleMenu);
+                }
+            });
+
+            // Проверяем наличие токена при загрузке страницы
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                // Если токен есть, перенаправляем на библиотеку
+                window.location.href = 'library.html';
+            }
+        });
+    </script>
+</body>
+</html>

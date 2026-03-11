@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>BookVerse - Чтение</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="white-theme">
+    <!-- Навигация -->
+    <nav class="main-nav">
+        <div class="nav-brand">
+            <a href="library.html" class="nav-link">📚 BookVerse</a>
+        </div>
+        
+        <div class="breadcrumbs">
+            <span id="breadcrumb-chapter" class="breadcrumb-item">Глава: Не выбрано</span>
+            <span id="breadcrumb-page" class="breadcrumb-item">Страница: 1</span>
+        </div>
+        
+        <div class="nav-actions">
+            <button id="toggle-chapters" class="nav-btn highlight">📑 Главы</button>
+            <button id="menuButton" class="nav-btn highlight">☰ Меню</button>
+        </div>
+    </nav>
+
+    <!-- Основной контент -->
+    <main class="reader-content">
+        <header>
+            <h1>BookVerse</h1>
+        </header>
+
+        <!-- Текстовый слой -->
+        <div id="text-layer" class="text-layer">
+            <div id="page-content" class="page-content">
+                <!-- Содержимое страницы будет загружаться сюда -->
+            </div>
+        </div>
+
+        <!-- Навигация по страницам -->
+        <div class="page-navigation">
+            <button id="prev-page" class="nav-btn">◀</button>
+            <div class="page-info">
+                <input type="number" id="page-input" min="1">
+                <span>из</span>
+                <span id="page-count">0</span>
+            </div>
+            <button id="next-page" class="nav-btn">▶</button>
+        </div>
+    </main>
+
+    <!-- Заменяем прогресс бар на простой процент -->
+    <div class="reading-percentage">
+        Прочитано: <span id="progress-percentage">0%</span>
+    </div>
+
+    <!-- Боковая панель -->
+    <aside class="side-panel" id="right-panel">
+        <div class="panel-content" id="panel-content">
+            <div class="panel-header">
+                <div class="user-profile">
+                    <div class="avatar">👤</div>
+                    <div class="user-info">
+                        <h3 class="username">${localStorage.getItem('username')}</h3>
+                        <p class="user-email">${localStorage.getItem('userEmail')}</p>
+                    </div>
+                </div>
+                <button class="icon-btn close-btn" id="closeBtn">✕</button>
+            </div>
+
+            <nav class="panel-nav">
+                <ul class="menu-list">
+                    <li>
+                        <button class="menu-item" onclick="showProfile()">
+                            <span class="icon">👤</span>
+                            <span class="text">Профиль</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button class="menu-item" onclick="showToolList()">
+                            <span class="icon">🧠</span>
+                            <span class="text">Инструменты</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button class="menu-item" onclick="openSettings()">
+                            <span class="icon">⚙️</span>
+                            <span class="text">Настройки</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="logout-section">
+                <button class="menu-item logout-btn" onclick="logout()">
+                    <span class="icon">🚪</span>
+                    <span class="text">Выйти</span>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Панель глав -->
+    <aside class="chapters-panel" id="chapters-panel">
+        <div class="chapters-header">
+            <h3>Содержание</h3>
+            <button class="nav-btn" id="close-chapters">✕</button>
+        </div>
+        <div id="chapters-list" class="chapters-list">
+            <!-- Главы будут добавлены через JavaScript -->
+        </div>
+    </aside>
+
+    <!-- Скрипты -->
+    <script src="scripts/aiTools.js?v=20260309c"></script>
+    <script type="module" src="scripts/main.js?v=20260309b"></script>
+    <script type="module" src="scripts/menu.js?v=20260309b"></script>
+    <script type="module" src="scripts/settings.js?v=20260309b"></script>
+    <script type="module" src="scripts/utils.js?v=20260309b"></script>
+    <script type="module" src="scripts/contextMenu.js?v=20260309b"></script>
+    <script type="module" src="scripts/reader.js?v=20260309b"></script>
+</body>
+</html> 

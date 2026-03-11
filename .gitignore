@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.pytest_cache/
+.mypy_cache/
+
+# Virtual env
+.venv/
+venv/
+
+# OS/IDE
+.DS_Store
+.vscode/
+.idea/
+
+# Local runtime data
+*.db
+uploads/
+case_books/
+
+# Logs/temp
+*.log
+*.tmp
+/tmp/
+
+# Large/local assets not required for source
+speech.mp3

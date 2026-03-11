@@ -1,0 +1,60 @@
+.visualization-container {
+    text-align: center;
+    margin: 20px auto;
+    max-width: 600px;
+    font-family: 'Arial', sans-serif;
+}
+
+.visualization-container label {
+    font-size: 1.2em;
+    color: white;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.visualization-container input[type="number"] {
+    padding: 10px;
+    margin: 10px 0;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 200px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+.visualization-container button {
+    padding: 12px 25px;
+    background-color: #ffdd2d; /* Жёлтая кнопка */
+    color: #1c1c1c; /* Тёмно-серый текст */
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background 0.3s;
+}
+
+.visualization-container button:hover {
+    background-color: #ffd700; /* Ярко-жёлтая при наведении */
+}
+
+.images-display {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.images-display img {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s;
+}
+
+.images-display img:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+}

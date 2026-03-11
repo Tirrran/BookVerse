@@ -1,0 +1,34 @@
+<div class="tool-content">
+    <form id="quiz-form">
+        <!-- Выбор уровня сложности -->
+        <div class="form-group">
+            <label for="difficulty">Выберите сложность:</label>
+            <select id="difficulty" name="difficulty">
+                <option value="easy">Легкая</option>
+                <option value="medium">Средняя</option>
+                <option value="hard">Сложная</option>
+            </select>
+        </div>
+
+        <!-- Выбор количества вопросов -->
+        <div class="form-group">
+            <label for="question-count">Количество вопросов:</label>
+            <input type="number" id="question-count" name="question-count" min="1" max="100" value="10">
+        </div>
+
+        <!-- Пожелания для генерации вопросов -->
+        <div class="form-group">
+            <label for="custom-input">Ваши пожелания для теста:</label>
+            <input type="text" id="custom-input" name="custom-input" placeholder="Например, вопросы по главам 1-3">
+        </div>
+
+        <!-- Кнопки -->
+        <div class="button-group">
+            <button type="button" id="generate-button">Сгенерировать викторину</button>
+            <button type="button" id="clear-button" style="display:none;">Очистить результат</button>
+        </div>
+    </form>
+
+    <!-- Отображение результата -->
+    <div id="quiz-result" class="summary-result">Тут будут отображаться вопросы и ответы</div>
+</div>

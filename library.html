@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>BookVerse - Моя библиотека</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/library.css?v=20260309c">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><text y='1em' font-size='2em'>📚</text></svg>">
+</head>
+<body>
+    <!-- Навигация -->
+    <nav class="main-nav">
+        <div class="nav-brand">
+            <span class="logo-icon">📚</span>
+            <h1 class="logo-text">BookVerse</h1>
+        </div>
+        
+        <div class="nav-actions">
+            <button class="upload-btn" id="uploadButton" title="Добавить книгу">
+                <span class="icon-text">+</span>
+                <span>Добавить книгу</span>
+            </button>
+            <button class="menu-btn" id="menuButton">
+                <span class="icon-text">☰</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Основной контент -->
+    <main class="content-wrapper">
+        <!-- Заголовок и управление -->
+        <header class="content-header">
+            <h2 class="page-title">Моя библиотека</h2>
+            <div class="filters-container">
+                <div class="search-container">
+                    <div class="search-bar">
+                        <input type="text" placeholder="Поиск по книгам..." id="search-input">
+                        <span class="search-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"/>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+                <div class="sort-filter">
+                    <select id="sort-by">
+                        <option value="date">По дате добавления</option>
+                        <option value="title">По названию</option>
+                        <option value="progress">По прогрессу чтения</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+
+        <!-- Индикатор загрузки -->
+        <div id="loading" class="loading-indicator" style="display: none;">
+            <div class="spinner"></div>
+            <span>Загрузка книг...</span>
+        </div>
+
+        <!-- Сообщение об ошибке -->
+        <div id="error-message" class="error-message" style="display: none;"></div>
+
+        <!-- Сетка книг -->
+        <section class="books-grid" id="books-grid">
+
+        </section>
+
+        <!-- Пустое состояние -->
+        <div id="empty-state" class="empty-state" style="display: none;">
+            <div class="empty-illustration">📚</div>
+            <h2>Ваша библиотека пуста</h2>
+            <p>Начните своё путешествие в мир книг, загрузив первую книгу</p>
+            <button class="upload-cta-btn" id="uploadCtaBtn">
+                Загрузить книгу
+            </button>
+        </div>
+    </main>
+
+    <!-- Боковая панель -->
+    <aside class="side-panel" id="right-panel">
+        <div class="panel-content" id="panel-content">
+            <div class="panel-header">
+                <div class="user-profile">
+                    <div class="user-info">
+                        <h3 class="username"></h3>
+                        <p class="user-email"></p>
+                    </div>
+                </div>
+                <button class="close-btn" id="closeBtn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            
+            <nav class="panel-nav">
+                <ul class="menu-list">
+                    <li>
+                        <button class="menu-item" onclick="showToolList()">
+                            <span class="icon">🧠</span>
+                            <span class="text">Инструменты</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button class="menu-item" onclick="openSettings()">
+                            <span class="icon">⚙️</span>
+                            <span class="text">Настройки</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="logout-section">
+                <button class="menu-item logout-btn" onclick="logout()">
+                    <span class="icon">🚪</span>
+                    <span class="text">Выйти</span>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Модальное окно загрузки -->
+    <div class="modal-overlay" id="upload-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Добавить книгу</h3>
+                <button class="close-btn" id="closeModalBtn">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-zone" id="drop-zone">
+                    <input type="file" id="file-input" accept=".fb2,.txt" onchange="window.__bookverseOnFileChange && window.__bookverseOnFileChange(event)">
+                    <label for="file-input" class="upload-label">
+                        <div class="upload-icon">📤</div>
+                        <p>Перетащите файлы сюда<br>или нажмите для выбора</p>
+                        <span class="file-types">Поддерживаемые форматы: FB2, TXT</span>
+                    </label>
+                </div>
+                <div style="margin-top: 12px; display: flex; justify-content: center;">
+                    <button class="upload-cta-btn" id="uploadNowBtn" type="button">Загрузить выбранный файл</button>
+                </div>
+                <div class="upload-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <span class="progress-text">0%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Скрипты -->
+    <script src="scripts/main.js?v=20260309b" type="module"></script>
+    <script type="module" src="scripts/menu.js?v=20260309b"></script>
+    <script src="scripts/auth.js?v=20260309b"></script>
+    <script type="module" src="scripts/settings.js?v=20260309b"></script>
+    <script type="module" src="scripts/contextMenu.js?v=20260309b"></script>
+    <!-- Добавляем перед закрывающим тегом body -->
+    <script src="scripts/aiTools.js?v=20260309c"></script>
+    <script>
+        (function () {
+            const rawHost = window.location.hostname || '127.0.0.1';
+            const API_HOST = (rawHost === '0.0.0.0' || rawHost === '[::]') ? '127.0.0.1' : rawHost;
+            const API_BASE_CANDIDATES = Array.from(
+                new Set([
+                    `http://${API_HOST}:8000`,
+                    'http://127.0.0.1:8000',
+                    'http://localhost:8000',
+                ]),
+            );
+            let apiBaseCache = null;
+
+            function ensureToken() {
+                const existing = localStorage.getItem('authToken');
+                if (existing) return existing;
+                const fallback = 'auth-disabled';
+                localStorage.setItem('authToken', fallback);
+                return fallback;
+            }
+
+            function updateProgress(text, percent) {
+                const wrap = document.querySelector('.upload-progress');
+                const fill = document.querySelector('.progress-fill');
+                const label = document.querySelector('.progress-text');
+                if (wrap) wrap.style.display = 'block';
+                if (fill && Number.isFinite(percent)) fill.style.width = `${Math.max(0, Math.min(100, percent))}%`;
+                if (label) label.textContent = text;
+            }
+
+            async function apiFetch(path, options = {}) {
+                const candidates = apiBaseCache
+                    ? [apiBaseCache, ...API_BASE_CANDIDATES.filter((item) => item !== apiBaseCache)]
+                    : API_BASE_CANDIDATES;
+
+                let lastError = null;
+                for (const base of candidates) {
+                    try {
+                        const response = await fetch(`${base}${path}`, options);
+                        apiBaseCache = base;
+                        return response;
+                    } catch (error) {
+                        lastError = error;
+                    }
+                }
+
+                throw lastError || new Error('Не удалось подключиться к API');
+            }
+
+            async function fallbackUpload(file) {
+                if (!file) return;
+                const ext = (file.name.split('.').pop() || '').toLowerCase();
+                if (!['txt', 'fb2'].includes(ext)) {
+                    updateProgress('Поддерживаются только .txt и .fb2', 0);
+                    return;
+                }
+
+                updateProgress(`Подготовка: ${file.name}`, 10);
+                const fd = new FormData();
+                fd.append('file', file);
+
+                try {
+                    updateProgress('Загрузка...', 40);
+                    const response = await apiFetch('/upload', {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${ensureToken()}` },
+                        body: fd
+                    });
+                    const data = await response.json().catch(() => ({}));
+                    if (!response.ok) {
+                        throw new Error(data.detail || 'Ошибка загрузки');
+                    }
+                    updateProgress('100% — книга загружена', 100);
+                    setTimeout(() => window.location.reload(), 500);
+                } catch (error) {
+                    if (error instanceof TypeError) {
+                        updateProgress('Нет подключения к backend (порт 8000)', 0);
+                    } else {
+                        updateProgress(error.message || 'Ошибка загрузки', 0);
+                    }
+                }
+            }
+
+            function initFallback() {
+                const input = document.getElementById('file-input');
+                const uploadNowBtn = document.getElementById('uploadNowBtn');
+                const dropZone = document.getElementById('drop-zone');
+
+                if (!input || !uploadNowBtn || !dropZone) return;
+
+                if (!window.__bookverseOnFileChange) {
+                    window.__bookverseOnFileChange = (event) => {
+                        const file = event?.target?.files?.[0];
+                        fallbackUpload(file);
+                    };
+                }
+
+                if (!uploadNowBtn.dataset.fallbackBound) {
+                    uploadNowBtn.dataset.fallbackBound = 'true';
+                    uploadNowBtn.addEventListener('click', () => {
+                        fallbackUpload(input.files?.[0]);
+                    });
+                }
+
+                if (!dropZone.dataset.fallbackBound) {
+                    dropZone.dataset.fallbackBound = 'true';
+                    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach((eventName) => {
+                        dropZone.addEventListener(eventName, (event) => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        });
+                    });
+                    ['dragenter', 'dragover'].forEach((eventName) => {
+                        dropZone.addEventListener(eventName, () => dropZone.classList.add('drag-over'));
+                    });
+                    ['dragleave', 'drop'].forEach((eventName) => {
+                        dropZone.addEventListener(eventName, () => dropZone.classList.remove('drag-over'));
+                    });
+                    dropZone.addEventListener('drop', (event) => {
+                        fallbackUpload(event.dataTransfer?.files?.[0]);
+                    });
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(initFallback, 250);
+            });
+        })();
+    </script>
+</body>
+</html> 
