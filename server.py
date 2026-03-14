@@ -2153,6 +2153,30 @@ RELATIONSHIP_MARKERS = (
     "сестр",
 )
 
+ACTION_MARKERS = (
+    "дела",
+    "сдела",
+    "поступ",
+    "реш",
+    "пош",
+    "приш",
+    "уш",
+    "верну",
+    "встрет",
+    "увид",
+    "сказ",
+    "рассказ",
+    "помог",
+    "спас",
+    "взя",
+    "отдал",
+    "напис",
+    "чита",
+    "поех",
+    "узнал",
+    "потреб",
+)
+
 THEME_MARKERS = (
     "смысл",
     "иде",
@@ -2203,6 +2227,21 @@ def normalize_sentence_text(sentence: str) -> str:
     clean = re.sub(r"^[\s,.;:!?\"'«»()\-–—]+", "", sentence.strip())
     clean = re.sub(r"\s+", " ", clean).strip()
     return clean
+
+
+def is_dialogue_heavy_sentence(text: str) -> bool:
+    stripped = text.strip()
+    if not stripped:
+        return False
+    if stripped.startswith(("—", "–", "-")):
+        return True
+
+    quote_count = text.count("«") + text.count("»") + text.count('"')
+    if quote_count >= 2 and len(tokenize_terms(text)) <= 20:
+        return True
+    if text.count("—") >= 2 and len(text) <= 220:
+        return True
+    return False
 
 
 def extract_clean_sentences(text: str) -> list[str]:
@@ -2520,6 +2559,23 @@ def sample_timeline_items(
         return items
     indices = overview_indices(len(items), count, prefer_end=prefer_end)
     return [items[idx] for idx in indices]
+
+
+def pick_top_scored_items(
+    scored: list[tuple[float, dict[str, Any]]],
+    count: int,
+    preserve_chronology: bool = True,
+) -> list[dict[str, Any]]:
+    if not scored:
+        return []
+
+    scored_sorted = sorted(scored, key=lambda row: row[0], reverse=True)
+    pool_size = max(count, min(len(scored_sorted), count * 3))
+    pool = [item for _, item in scored_sorted[:pool_size]]
+
+    if preserve_chronology:
+        pool = chronological_sentences(pool)
+    return pool[:count]
 
 
 def has_causal_marker(text: str) -> bool:
@@ -2939,7 +2995,10 @@ def build_intent_answer_from_fragments(
                 if left_key and right_key:
                     edge_pairs.append({left_key, right_key})
                 if left_name and right_name:
-                    edge_labels.append(f"{left_name} и {right_name}")
+                    if normalize_name_token(left_name) != normalize_name_token(right_name):
+                        label = f"{left_name} и {right_name}"
+                        if label not in edge_labels:
+                            edge_labels.append(label)
 
         for item in candidates:
             name_key_set = set(item.get("name_keys", []))
@@ -2948,8 +3007,14 @@ def build_intent_answer_from_fragments(
             has_main_pair = len(main_set & name_key_set) >= 2
             has_main_one = len(main_set & name_key_set) >= 1
             edge_match = max((len(pair & name_key_set) for pair in edge_pairs), default=0)
+            dialogue_penalty = 0.24 if is_dialogue_heavy_sentence(item.get("text", "")) else 0.0
 
-            if not has_main_pair and edge_match < 2 and marker_hits == 0 and names_count < 2:
+            if not has_main_pair and edge_match < 2 and names_count < 2:
+                if marker_hits == 0 or names_count == 0:
+                    continue
+            if names_count >= 2 and not has_main_one and edge_match == 0 and marker_hits == 0:
+                continue
+            if dialogue_penalty > 0 and marker_hits == 0 and edge_match < 2:
                 continue
 
             score = item.get("base_score", 0.0) + marker_hits * 0.18 + (0.25 if names_count >= 2 else 0.0)
@@ -2961,14 +3026,15 @@ def build_intent_answer_from_fragments(
                 score += 0.42
             elif edge_match == 1:
                 score += 0.18
+            score -= dialogue_penalty
             scored.append((score, item))
 
         if not scored:
-            selected = timeline[:2]
+            non_dialogue = [item for item in timeline if not is_dialogue_heavy_sentence(item.get("text", ""))]
+            selected = sample_timeline_items(non_dialogue if non_dialogue else timeline, 2, prefer_end=False)
             intro = "По этим фрагментам показаны взаимоотношения персонажей."
         else:
-            scored.sort(key=lambda pair: pair[0], reverse=True)
-            selected = [item for _, item in scored[:2]]
+            selected = pick_top_scored_items(scored, 2, preserve_chronology=True)
             if edge_labels:
                 intro = f"По книге заметны связи между персонажами: {'; '.join(edge_labels[:2])}."
             else:
@@ -3031,35 +3097,72 @@ def build_intent_answer_from_fragments(
             name_key_set = set(item.get("name_keys", []))
             has_focus = bool(focus_set & name_key_set) if focus_set else False
             causal_bonus = 0.3 if has_causal_marker(item.get("text", "")) else 0.0
-            score = item.get("base_score", 0.0) + overlap * 0.45 + causal_bonus
+            action_hits = count_marker_hits(item.get("terms", []), ACTION_MARKERS)
+            dialogue_penalty = 0.2 if is_dialogue_heavy_sentence(item.get("text", "")) else 0.0
+            score = item.get("base_score", 0.0) + overlap * 0.36 + causal_bonus + action_hits * 0.08
             if has_focus:
                 score += 0.2
-            if causal_bonus > 0 or overlap > 0.08 or has_focus:
-                scored.append((score, item))
+            score -= dialogue_penalty
+
+            if causal_bonus == 0 and overlap < 0.12 and not (has_focus and action_hits > 0):
+                continue
+            if dialogue_penalty > 0 and causal_bonus == 0 and overlap < 0.2:
+                continue
+            scored.append((score, item))
 
         if scored:
-            scored.sort(key=lambda pair: pair[0], reverse=True)
-            selected = [item for _, item in scored[:2]]
+            selected = pick_top_scored_items(scored, 2, preserve_chronology=True)
         else:
-            selected = sample_timeline_items(timeline, 2, prefer_end=False)
+            non_dialogue = [item for item in timeline if not is_dialogue_heavy_sentence(item.get("text", ""))]
+            selected = sample_timeline_items(non_dialogue if non_dialogue else timeline, 2, prefer_end=False)
 
-        if focus_name:
+        selected_has_focus = bool(
+            focus_key and any(focus_key in set(item.get("name_keys", [])) for item in selected)
+        )
+        if focus_name and selected_has_focus:
             intro = f"По тексту причины действий героя {focus_name} выглядят так:"
         else:
             intro = "По тексту причины действий героя выглядят так:"
         return f"{intro} {' '.join(item['text'] for item in selected)}"
 
     if intent == "actions":
-        if focus_key:
-            action_sentences = [item for item in timeline if focus_key in item.get("name_keys", [])]
-            selected = (
-                sample_timeline_items(action_sentences, 2, prefer_end=False)
-                if action_sentences
-                else sample_timeline_items(timeline, 2, prefer_end=False)
-            )
+        question_terms = tokenize_terms(question)
+        focus_set = set(main_character_keys[:2])
+        action_scored: list[tuple[float, dict[str, Any]]] = []
+
+        for item in timeline:
+            terms = item.get("terms", [])
+            name_key_set = set(item.get("name_keys", []))
+            has_focus = bool(focus_set & name_key_set) if focus_set else False
+            action_hits = count_marker_hits(terms, ACTION_MARKERS)
+            overlap = lexical_overlap_score(question_terms, terms)
+            dialogue_penalty = 0.22 if is_dialogue_heavy_sentence(item.get("text", "")) else 0.0
+
+            score = item.get("base_score", 0.0) + action_hits * 0.2 + overlap * 0.3
+            if has_focus:
+                score += 0.22
+            score -= dialogue_penalty
+
+            if action_hits == 0 and overlap < 0.1:
+                continue
+            if focus_set and not has_focus and overlap < 0.2 and action_hits < 2:
+                continue
+            if dialogue_penalty > 0 and action_hits < 2 and overlap < 0.2:
+                continue
+            action_scored.append((score, item))
+
+        if action_scored:
+            selected = pick_top_scored_items(action_scored, 2, preserve_chronology=True)
+        else:
+            non_dialogue = [item for item in timeline if not is_dialogue_heavy_sentence(item.get("text", ""))]
+            selected = sample_timeline_items(non_dialogue if non_dialogue else timeline, 2, prefer_end=False)
+
+        selected_has_focus = bool(
+            focus_key and any(focus_key in set(item.get("name_keys", [])) for item in selected)
+        )
+        if focus_name and selected_has_focus:
             intro = f"По тексту действия героя {focus_name} описаны так:"
         else:
-            selected = sample_timeline_items(timeline, 2, prefer_end=False)
             intro = "По тексту действия героя описаны так:"
         return f"{intro} {' '.join(item['text'] for item in selected)}"
 
