@@ -120,8 +120,8 @@ window.selectTool = async function selectTool(toolName) {
             await new Promise((resolve, reject) => {
                 const scriptTag = document.createElement("script");
                 scriptTag.src = withVersion(tool.script);
-                // В классическом режиме скрипт выполняется при каждом повторном открытии инструмента.
-                scriptTag.type = "text/javascript";
+                // Инструменты грузим как ESM-модули, чтобы можно было импортировать локальное ядро.
+                scriptTag.type = "module";
                 scriptTag.dataset.toolAsset = "true";
                 scriptTag.onload = () => resolve();
                 scriptTag.onerror = () => reject(new Error("Не удалось загрузить JS инструмента"));

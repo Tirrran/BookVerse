@@ -122,40 +122,10 @@
     </div>
 
     <!-- Скрипты -->
-    <script src="scripts/main.js?v=20260309b" type="module"></script>
-    <script type="module" src="scripts/menu.js?v=20260309b"></script>
-    <script src="scripts/auth.js?v=20260309b"></script>
-    <script type="module" src="scripts/settings.js?v=20260309b"></script>
-    <script type="module" src="scripts/aiTools.js?v=20260309c"></script>
-    <script type="module" src="scripts/contextMenu.js?v=20260309b"></script>
-    <script type="module">
-        import { toggleMenu, toggleUpload } from './scripts/utils.js';
-        
-        // Добавляем обработчики после загрузки DOM
-        document.addEventListener('DOMContentLoaded', () => {
-            // Кнопки для загрузки
-            ['uploadButton', 'uploadCtaBtn', 'closeModalBtn'].forEach(id => {
-                const button = document.getElementById(id);
-                if (button) {
-                    button.addEventListener('click', toggleUpload);
-                }
-            });
-
-            // Кнопки для меню
-            ['menuButton', 'closeBtn'].forEach(id => {
-                const button = document.getElementById(id);
-                if (button) {
-                    button.addEventListener('click', toggleMenu);
-                }
-            });
-
-            // Проверяем наличие токена при загрузке страницы
-            const token = localStorage.getItem('authToken');
-            if (token) {
-                // Если токен есть, перенаправляем на библиотеку
-                window.location.href = 'library.html';
-            }
-        });
-    </script>
+    <script type="module" src="scripts/main.js?v=offline1"></script>
+    <script type="module" src="scripts/menu.js?v=offline1"></script>
+    <script type="module" src="scripts/settings.js?v=offline1"></script>
+    <script src="scripts/aiTools.js?v=offline1"></script>
+    <script type="module" src="scripts/contextMenu.js?v=offline1"></script>
 </body>
 </html>

@@ -1,59 +1,16 @@
-// scripts/menu.js
-
-const rawHost = window.location.hostname || '127.0.0.1';
-const apiHost = (rawHost === '0.0.0.0' || rawHost === '[::]') ? '127.0.0.1' : rawHost;
-const API_BASE_CANDIDATES = Array.from(
-    new Set([
-        `http://${apiHost}:8000`,
-        'http://127.0.0.1:8000',
-        'http://localhost:8000',
-    ]),
-);
-let apiBaseCache = null;
-
-async function apiFetch(path, options = {}) {
-    const candidates = apiBaseCache
-        ? [apiBaseCache, ...API_BASE_CANDIDATES.filter((item) => item !== apiBaseCache)]
-        : API_BASE_CANDIDATES;
-
-    let lastError = null;
-    for (const base of candidates) {
-        try {
-            const response = await fetch(`${base}${path}`, options);
-            apiBaseCache = base;
-            return response;
-        } catch (error) {
-            lastError = error;
-        }
-    }
-
-    throw lastError || new Error('Не удалось подключиться к API');
-}
-
-function getAuthToken() {
-    const existing = localStorage.getItem('authToken');
-    if (existing) return existing;
-
-    const fallback = 'auth-disabled';
-    localStorage.setItem('authToken', fallback);
-    return fallback;
-}
+import { getBookMetas, getLibraryStats } from './localBooks.js';
 
 function toggleMenu() {
     const panel = document.getElementById('right-panel');
-    if (panel) {
-        panel.classList.toggle('visible');
-    }
+    if (!panel) return;
+    panel.classList.toggle('visible');
 }
 
-window.toggleMenu = toggleMenu;
-
-// Закрываем меню при клике снаружи
 function bindOutsideClose() {
     const rightPanel = document.getElementById('right-panel');
     const menuButton = document.getElementById('menuButton');
-
     if (!rightPanel || !menuButton || document.body.dataset.menuOutsideBound === 'true') return;
+
     document.body.dataset.menuOutsideBound = 'true';
 
     document.addEventListener('click', (event) => {
@@ -69,54 +26,36 @@ function bindOutsideClose() {
     });
 }
 
-async function loadUserProfile() {
-    try {
-        const response = await apiFetch('/api/user/profile', {
-            headers: {
-                Authorization: `Bearer ${getAuthToken()}`,
-            },
-        });
+function getLocalProfile() {
+    const stats = getLibraryStats();
+    const books = getBookMetas();
+    const lastBook = books[0] || null;
 
-        if (!response.ok) {
-            const data = await response.json().catch(() => ({}));
-            throw new Error(data.detail || 'Ошибка загрузки профиля');
-        }
-
-        return await response.json();
-    } catch (error) {
-        console.error('Ошибка загрузки профиля:', error);
-        return null;
-    }
+    return {
+        name: localStorage.getItem('username') || 'Локальный пользователь',
+        email: localStorage.getItem('userEmail') || 'offline@bookverse.local',
+        stats,
+        last_book: lastBook
+            ? {
+                title: lastBook.title || lastBook.filename,
+                last_read: lastBook.upload_date,
+            }
+            : null,
+    };
 }
 
-async function showMenu() {
+function showMenu() {
     const panelContent = document.getElementById('panel-content');
     if (!panelContent) return;
 
-    panelContent.innerHTML = `
-        <div class="loading">
-            <div class="spinner"></div>
-            <p>Загрузка профиля...</p>
-        </div>
-    `;
-
-    const userData = await loadUserProfile();
-    if (!userData) {
-        panelContent.innerHTML = `
-            <div class="error">
-                <p>Ошибка загрузки профиля</p>
-                <button onclick="showMenu()">Повторить</button>
-            </div>
-        `;
-        return;
-    }
+    const profile = getLocalProfile();
 
     panelContent.innerHTML = `
         <div class="panel-header">
             <div class="user-profile">
                 <div class="user-info">
-                    <h3 class="username">${userData.name || 'Гость'}</h3>
-                    <p class="user-email">${userData.email || 'guest@bookverse.local'}</p>
+                    <h3 class="username">${profile.name}</h3>
+                    <p class="user-email">${profile.email}</p>
                 </div>
             </div>
             <button class="icon-btn close-btn" id="closeBtn" onclick="toggleMenu()">✕</button>
@@ -152,75 +91,52 @@ async function showMenu() {
     `;
 }
 
-async function showProfile() {
+function showProfile() {
     const panelContent = document.getElementById('panel-content');
     if (!panelContent) return;
 
+    const profile = getLocalProfile();
+    const booksRead = profile.stats?.books_read || 0;
+    const booksInProgress = profile.stats?.books_in_progress || 0;
+
     panelContent.innerHTML = `
-        <div class="loading">
-            <div class="spinner"></div>
-            <p>Загрузка профиля...</p>
+        <div class="panel-header">
+            <button class="back-btn" onclick="showMenu()">← Назад</button>
+            <h2>Профиль</h2>
+        </div>
+        <div class="profile-content">
+            <div class="user-profile">
+                <div class="user-info">
+                    <h3 class="username">${profile.name}</h3>
+                    <p class="user-email">${profile.email}</p>
+                </div>
+            </div>
+            <div class="stats-section">
+                <h3>Статистика</h3>
+                <div class="user-stats">
+                    <div class="stat-card">
+                        <div class="number">${booksRead}</div>
+                        <div class="label">Прочитано книг</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">${booksInProgress}</div>
+                        <div class="label">В процессе</div>
+                    </div>
+                </div>
+            </div>
+            ${profile.last_book ? `
+                <div class="last-book-section">
+                    <h3>Последняя книга</h3>
+                    <div class="last-book">
+                        <h4>${profile.last_book.title}</h4>
+                        <p class="last-read">Добавлена: ${new Date(profile.last_book.last_read).toLocaleDateString('ru-RU')}</p>
+                    </div>
+                </div>
+            ` : ''}
         </div>
     `;
-
-    try {
-        const userData = await loadUserProfile();
-        if (!userData) throw new Error('Не удалось загрузить данные профиля');
-
-        const lastBook = userData.lastBook || userData.last_book || null;
-        const booksInProgress = userData.stats?.books_in_progress || 0;
-        const booksRead = userData.stats?.books_read || 0;
-
-        panelContent.innerHTML = `
-            <div class="panel-header">
-                <button class="back-btn" onclick="showMenu()">← Назад</button>
-                <h2>Профиль</h2>
-            </div>
-            <div class="profile-content">
-                <div class="user-profile">
-                    <div class="user-info">
-                        <h3 class="username">${userData.name || 'Гость'}</h3>
-                        <p class="user-email">${userData.email || 'guest@bookverse.local'}</p>
-                    </div>
-                </div>
-
-                <div class="stats-section">
-                    <h3>Статистика</h3>
-                    <div class="user-stats">
-                        <div class="stat-card">
-                            <div class="number">${booksRead}</div>
-                            <div class="label">Прочитано книг</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="number">${booksInProgress}</div>
-                            <div class="label">В процессе</div>
-                        </div>
-                    </div>
-                </div>
-
-                ${lastBook && lastBook.title ? `
-                    <div class="last-book-section">
-                        <h3>Последняя книга</h3>
-                        <div class="last-book">
-                            <h4>${lastBook.title}</h4>
-                            <p class="last-read">Последнее чтение: ${lastBook.last_read ? new Date(lastBook.last_read).toLocaleDateString() : '—'}</p>
-                        </div>
-                    </div>
-                ` : ''}
-            </div>
-        `;
-    } catch (error) {
-        console.error('Ошибка при загрузке профиля:', error);
-        panelContent.innerHTML = `
-            <div class="error">
-                <p>Ошибка загрузки профиля</p>
-                <button onclick="showProfile()">Повторить</button>
-            </div>
-        `;
-    }
 }
 
-// Резервный рендер списка инструментов (если scripts/aiTools.js не загрузился)
 function showToolListFallback() {
     const panelContent = document.getElementById('panel-content');
     if (!panelContent) return;
@@ -239,13 +155,15 @@ function showToolListFallback() {
         return;
     }
 
-    const toolsHtml = tools.map(([id, tool]) => `
-        <button class="tool-card" type="button" onclick="selectTool('${id}')">
-            <div class="tool-icon">${tool.icon}</div>
-            <h3>${tool.title}</h3>
-            <p>${tool.description}</p>
-        </button>
-    `).join('');
+    const toolsHtml = tools
+        .map(([id, tool]) => `
+            <button class="tool-card" type="button" onclick="selectTool('${id}')">
+                <div class="tool-icon">${tool.icon}</div>
+                <h3>${tool.title}</h3>
+                <p>${tool.description}</p>
+            </button>
+        `)
+        .join('');
 
     panelContent.innerHTML = `
         <div class="panel-header">
@@ -253,15 +171,22 @@ function showToolListFallback() {
             <button class="back-btn" onclick="showMenu()">← Назад</button>
         </div>
         <div class="tool-container">
-            <div class="tools-grid">
-                ${toolsHtml}
-            </div>
+            <div class="tools-grid">${toolsHtml}</div>
         </div>
     `;
 }
 
+function logout() {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('username');
+    localStorage.removeItem('userEmail');
+    window.location.href = 'index.html';
+}
+
+window.toggleMenu = toggleMenu;
 window.showMenu = showMenu;
 window.showProfile = showProfile;
+window.logout = logout;
 if (typeof window.showToolList !== 'function') {
     window.showToolList = showToolListFallback;
 }
