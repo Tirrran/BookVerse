@@ -48,24 +48,9 @@ logger = logging.getLogger(__name__)
 client = None
 
 SECRET_KEY = os.getenv("BOOKVERSE_SECRET_KEY", "change-me-in-env")
-AUTH_DISABLED = os.getenv("BOOKVERSE_DISABLE_AUTH", "true").lower() in {
-    "1",
-    "true",
-    "yes",
-    "on",
-}
-ALGORITHM_ONLY_MODE = os.getenv("BOOKVERSE_ALGO_ONLY", "false").lower() in {
-    "1",
-    "true",
-    "yes",
-    "on",
-}
-LOCAL_LLM_ENABLED = os.getenv("BOOKVERSE_LOCAL_LLM_ENABLED", "true").lower() in {
-    "1",
-    "true",
-    "yes",
-    "on",
-}
+AUTH_DISABLED = True
+ALGORITHM_ONLY_MODE = False
+LOCAL_LLM_ENABLED = True
 LOCAL_LLM_BASE_URL = os.getenv("BOOKVERSE_LOCAL_LLM_BASE_URL", "http://127.0.0.1:11434").rstrip(
     "/"
 )

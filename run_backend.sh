@@ -11,13 +11,24 @@ fi
 
 source .venv/bin/activate
 
-export BOOKVERSE_DISABLE_AUTH="${BOOKVERSE_DISABLE_AUTH:-true}"
-export BOOKVERSE_ALGO_ONLY="${BOOKVERSE_ALGO_ONLY:-false}"
-export BOOKVERSE_LOCAL_LLM_ENABLED="${BOOKVERSE_LOCAL_LLM_ENABLED:-true}"
-export BOOKVERSE_LOCAL_LLM_BASE_URL="${BOOKVERSE_LOCAL_LLM_BASE_URL:-http://127.0.0.1:11434}"
-export BOOKVERSE_LOCAL_LLM_MODEL="${BOOKVERSE_LOCAL_LLM_MODEL:-gemma3:1b}"
-export BOOKVERSE_LOCAL_LLM_FALLBACK_MODELS="${BOOKVERSE_LOCAL_LLM_FALLBACK_MODELS:-gemma3:1b}"
-export BOOKVERSE_LOCAL_LLM_TIMEOUT_SEC="${BOOKVERSE_LOCAL_LLM_TIMEOUT_SEC:-90}"
+# Автозапуск Ollama для гибридного режима (если сервис еще не поднят).
+if command -v ollama >/dev/null 2>&1; then
+  if curl -fsS "http://127.0.0.1:11434/api/tags" >/dev/null 2>&1; then
+    echo "Ollama уже запущена (127.0.0.1:11434)."
+  else
+    echo "Запускаю Ollama (127.0.0.1:11434)..."
+    nohup ollama serve >/tmp/bookverse-ollama.log 2>&1 &
+    for _ in {1..20}; do
+      if curl -fsS "http://127.0.0.1:11434/api/tags" >/dev/null 2>&1; then
+        echo "Ollama запущена."
+        break
+      fi
+      sleep 0.3
+    done
+  fi
+else
+  echo "Ollama не найдена в PATH. Продолжаю без LLM-этапа."
+fi
 
 EXISTING_PID="$( (lsof -nP -iTCP:8000 -sTCP:LISTEN 2>/dev/null || true) | awk 'NR==2 {print $2}' )"
 if [[ -n "${EXISTING_PID:-}" ]]; then
@@ -27,4 +38,8 @@ if [[ -n "${EXISTING_PID:-}" ]]; then
 fi
 
 echo "Запускаю backend на http://127.0.0.1:8000"
+if [[ -f ".env" ]]; then
+  exec uvicorn server:app --host 127.0.0.1 --port 8000 --env-file .env
+fi
+
 exec uvicorn server:app --host 127.0.0.1 --port 8000

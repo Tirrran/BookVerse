@@ -13,14 +13,12 @@
 - [2. Быстрый старт](#2-быстрый-старт)
 - [3. Возможности под критерии конкурса](#3-возможности-под-критерии-конкурса)
 - [4. Как работает гибридный режим](#4-как-работает-гибридный-режим)
-- [5. Подробный запуск (вкладки)](#5-подробный-запуск-вкладки)
-- [6. Работа через интерфейс (демо-сценарий)](#6-работа-через-интерфейс-демо-сценарий)
-- [7. API-эндпоинты](#7-api-эндпоинты)
-- [8. Формат ответов и метаданные качества](#8-формат-ответов-и-метаданные-качества)
-- [9. Переменные окружения](#9-переменные-окружения)
-- [10. Структура проекта](#10-структура-проекта)
-- [11. Проверка по критериям жюри](#11-проверка-по-критериям-жюри)
-- [12. Troubleshooting](#12-troubleshooting)
+- [5. Работа через интерфейс (демо-сценарий)](#5-работа-через-интерфейс-демо-сценарий)
+- [6. API-эндпоинты](#6-api-эндпоинты)
+- [7. Формат ответов и метаданные качества](#7-формат-ответов-и-метаданные-качества)
+- [8. Переменные окружения](#8-переменные-окружения)
+- [9. Структура проекта](#9-структура-проекта)
+- [10. Troubleshooting](#10-troubleshooting)
 
 ---
 
@@ -40,26 +38,29 @@ BookVerse — это сервис, который:
 
 ## 2. Быстрый старт
 
+Откройте терминал **в корне проекта**:
+
 ```bash
-cd "/Users/kirill/Documents/Code/BookVerse (3)"
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Запуск backend:
+Один раз загрузите локальную модель:
 
 ```bash
-export BOOKVERSE_DISABLE_AUTH=true
-export BOOKVERSE_ALGO_ONLY=false
-export BOOKVERSE_LOCAL_LLM_ENABLED=true
-uvicorn server:app --host 127.0.0.1 --port 8000
+ollama pull gemma3:1b
 ```
 
-Запуск frontend (во втором терминале):
+Основной запуск backend (скрипт сам поднимет Ollama, если она не запущена):
 
 ```bash
-cd "/Users/kirill/Documents/Code/BookVerse (3)"
+./run_backend.sh
+```
+
+Запуск frontend:
+
+```bash
 python3 -m http.server 5500
 ```
 
@@ -111,76 +112,7 @@ python3 -m http.server 5500
 
 ---
 
-## 5. Подробный запуск (вкладки)
-
-<details open>
-<summary><b>Вкладка 1 — Самый простой запуск через скрипт</b></summary>
-
-Если зависимости уже установлены:
-
-```bash
-cd "/Users/kirill/Documents/Code/BookVerse (3)"
-./run_backend.sh
-```
-
-Во втором терминале:
-
-```bash
-cd "/Users/kirill/Documents/Code/BookVerse (3)"
-python3 -m http.server 5500
-```
-
-</details>
-
-<details>
-<summary><b>Вкладка 2 — Ручной запуск backend</b></summary>
-
-```bash
-cd "/Users/kirill/Documents/Code/BookVerse (3)"
-source .venv/bin/activate
-
-export BOOKVERSE_DISABLE_AUTH=true
-export BOOKVERSE_ALGO_ONLY=false
-export BOOKVERSE_LOCAL_LLM_ENABLED=true
-export BOOKVERSE_LOCAL_LLM_MODEL=gemma3:1b
-export BOOKVERSE_LOCAL_LLM_FALLBACK_MODELS="gemma3:1b,qwen2.5:1.5b-instruct"
-
-uvicorn server:app --host 127.0.0.1 --port 8000
-```
-
-</details>
-
-<details>
-<summary><b>Вкладка 3 — Запуск локальной LLM (Ollama)</b></summary>
-
-```bash
-ollama serve
-```
-
-И один раз загрузить модели:
-
-```bash
-ollama pull gemma3:1b
-ollama pull qwen2.5:1.5b-instruct
-```
-
-Рекомендация для MacBook Air M1: начать с `gemma3:1b`.
-
-</details>
-
-<details>
-<summary><b>Вкладка 4 — Если порт 8000 занят</b></summary>
-
-```bash
-lsof -nP -iTCP:8000 -sTCP:LISTEN
-kill <PID>
-```
-
-</details>
-
----
-
-## 6. Работа через интерфейс (демо-сценарий)
+## 5. Работа через интерфейс (демо-сценарий)
 
 1. Откройте `library.html` или `index.html`.
 2. Загрузите книгу (`.txt` / `.fb2`).
@@ -206,7 +138,7 @@ kill <PID>
 
 ---
 
-## 7. API-эндпоинты
+## 6. API-эндпоинты
 
 ### Пользовательские книги
 - `POST /api/books/search`
@@ -252,7 +184,7 @@ curl -X POST "http://127.0.0.1:8000/api/case/ask" \
 
 ---
 
-## 8. Формат ответов и метаданные качества
+## 7. Формат ответов и метаданные качества
 
 В `ask`-ответах, помимо `answer` и `citations`, возвращаются:
 
@@ -271,13 +203,10 @@ curl -X POST "http://127.0.0.1:8000/api/case/ask" \
 
 ---
 
-## 9. Переменные окружения
+## 8. Переменные окружения
 
 | Переменная | По умолчанию | Назначение |
 |---|---:|---|
-| `BOOKVERSE_DISABLE_AUTH` | `true` | Отключить авторизацию для локального демо |
-| `BOOKVERSE_ALGO_ONLY` | `false` | Принудительно алгоритмический режим |
-| `BOOKVERSE_LOCAL_LLM_ENABLED` | `true` | Включить LLM-этап |
 | `BOOKVERSE_LOCAL_LLM_BASE_URL` | `http://127.0.0.1:11434` | URL Ollama |
 | `BOOKVERSE_LOCAL_LLM_MODEL` | `gemma3:1b` | Основная локальная модель |
 | `BOOKVERSE_LOCAL_LLM_FALLBACK_MODELS` | `gemma3:1b` | Резервные модели через запятую |
@@ -291,7 +220,7 @@ curl -X POST "http://127.0.0.1:8000/api/case/ask" \
 
 ---
 
-## 10. Структура проекта
+## 9. Структура проекта
 
 ```text
 BookVerse (3)/
@@ -314,35 +243,7 @@ BookVerse (3)/
 
 ---
 
-## 11. Проверка по критериям жюри
-
-### 0–6: Качество основной функциональности
-- Проверить 10–15 вопросов разных типов:
-  - сюжет,
-  - события по главам,
-  - действия/мотивация героя,
-  - связи персонажей.
-- Убедиться, что есть цитаты и честные отказы, где данных нет.
-
-### 0–3: Добавление и обработка книг
-- Загрузить `.txt` и `.fb2`.
-- Проверить, что книги появляются в библиотеке и участвуют в поиске.
-
-### 0–4: Удобство интерфейса
-- Поиск фрагментов с фильтрами.
-- Q&A + карточка героя + таймлайн + граф.
-- Переход к фрагменту в ридере.
-
-### 0–2: Качество кода и архитектуры
-- Четко разделены retrieval / synthesis / grounding / UI.
-- Есть кэш и fallback-механизмы.
-
-### 0–2: Оформление репозитория
-- Есть подробный README с запуском, API и сценариями.
-
----
-
-## 12. Troubleshooting
+## 10. Troubleshooting
 
 <details>
 <summary><b>Ошибка: address already in use (127.0.0.1:8000)</b></summary>
@@ -386,4 +287,3 @@ ollama pull gemma3:1b
 ## License
 
 Учебный/конкурсный проект.
-
