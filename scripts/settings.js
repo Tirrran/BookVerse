@@ -10,9 +10,19 @@ document.addEventListener('input', function(e) {
     }
 });
 
+const THEME_CLASSES = ['white-theme', 'black-theme', 'sepia-theme'];
+
+function setBodyTheme(theme) {
+    const body = document.body;
+    if (!body) return;
+
+    body.classList.remove(...THEME_CLASSES);
+    body.classList.add(theme);
+}
+
 // Функция изменения темы
 function changeTheme(theme) {
-    document.body.className = theme;
+    setBodyTheme(theme);
     localStorage.setItem('theme', theme);
 }
 
@@ -93,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedColorblindMode = localStorage.getItem('colorblindMode') === 'true';
 
     // Применяем настройки
-    document.body.className = savedTheme;
+    setBodyTheme(savedTheme);
     document.documentElement.style.setProperty('--base-font-size', `${savedFontSize}px`);
     document.documentElement.style.setProperty('--font-family', savedFontFamily);
     document.documentElement.style.setProperty('--line-spacing', savedLineSpacing);
@@ -230,10 +240,8 @@ function applyTheme() {
     const selectedTheme = themeSelect.value;
     const body = document.body;
 
-    // Удаляем предыдущие темы
-    body.classList.remove('white-theme', 'black-theme');
-
-    // Применяем выбранную тему
+    // Применяем выбранную тему без удаления прочих классов body (например, reader-page)
+    body.classList.remove(...THEME_CLASSES);
     body.classList.add(selectedTheme);
 
     // Сохраняем в localStorage
@@ -297,7 +305,7 @@ export function applySavedSettings() {
     }
 
     const theme = localStorage.getItem('theme') || 'white-theme';
-    document.body.className = theme;
+    setBodyTheme(theme);
     
     const fontSize = localStorage.getItem('fontSize') || '16px';
     document.documentElement.style.setProperty('--base-font-size', fontSize);

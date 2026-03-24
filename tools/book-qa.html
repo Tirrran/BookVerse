@@ -5,13 +5,88 @@
     </div>
 
     <section class="tool-section">
+        <h3>Поиск фрагментов</h3>
+        <div class="action-row">
+            <input type="text" id="search-query" placeholder="Например: Найди, где герой обсуждает дуэль" />
+            <button id="search-button">Искать</button>
+        </div>
+        <div class="search-filter-row">
+            <label><input type="checkbox" id="search-strict-phrase" /> Точная фраза</label>
+            <label><input type="checkbox" id="search-whole-words" /> Только целые слова</label>
+            <label class="chapter-filter-label">
+                Глава:
+                <input type="number" id="search-chapter-number" min="1" step="1" placeholder="любая" />
+            </label>
+        </div>
+        <div class="hint-line">
+            В строгом режиме поиск идет по символам. Опция «Только целые слова» исключает частичные совпадения.
+        </div>
+        <div id="search-status" class="status-line"></div>
+        <div id="search-results" class="results-list"></div>
+    </section>
+
+    <section class="tool-section">
         <h3>Ответ на вопрос с цитатами</h3>
+        <div class="qa-presets" id="qa-presets">
+            <button type="button" class="qa-preset-btn" data-question="Какой общий сюжет книги?">Сюжет</button>
+            <button type="button" class="qa-preset-btn" data-question="Что происходит в главе 1?">Глава</button>
+            <button type="button" class="qa-preset-btn" data-question="Что делал главный герой?">Действия героя</button>
+            <button type="button" class="qa-preset-btn" data-question="Как зовут главного героя?">Имя героя</button>
+            <button type="button" class="qa-preset-btn" data-question="Опиши главного героя">Описание героя</button>
+        </div>
+        <div class="answer-mode-row">
+            <label>Режим: <strong>Гибрид</strong> (алгоритм + локальная LLM + проверка по цитатам)</label>
+        </div>
+        <div class="local-model-row">
+            <input
+                type="text"
+                id="local-llm-model"
+                placeholder="Модель Ollama (например: gemma3:1b)"
+            />
+            <div class="model-preset-row">
+                <button type="button" class="model-preset-btn" data-model="gemma3:1b">gemma3:1b (быстро)</button>
+                <button type="button" class="model-preset-btn" data-model="qwen2.5:1.5b-instruct">qwen2.5:1.5b (точнее)</button>
+            </div>
+            <div class="hint-line">
+                Для MacBook Air M1 лучше начать с gemma3:1b. Если Ollama недоступен, ответ безопасно возвращается к алгоритмическому.
+            </div>
+        </div>
         <div class="action-row">
             <input type="text" id="question-input" placeholder="Например: Какой сюжет по итогу?" />
             <button id="ask-button">Ответить</button>
         </div>
         <div id="answer-status" class="status-line"></div>
         <div id="answer-box" class="answer-box"></div>
+        <div id="character-card" class="character-card" hidden>
+            <h4>Карточка героя</h4>
+            <div id="character-card-name" class="character-card-name"></div>
+            <div id="character-card-focus" class="character-card-focus"></div>
+            <div id="character-card-gender" class="character-card-gender"></div>
+            <div id="character-card-source" class="character-card-source"></div>
+            <div id="character-card-role" class="character-card-role"></div>
+            <div id="character-card-traits" class="character-card-list"></div>
+            <div id="character-card-actions" class="character-card-list"></div>
+            <div id="character-card-goals" class="character-card-list"></div>
+            <div id="character-card-relations" class="character-card-list"></div>
+            <div id="character-card-evolution" class="character-card-note"></div>
+            <div id="character-card-chapters" class="character-card-list"></div>
+            <div id="character-card-note" class="character-card-note"></div>
+        </div>
+        <div id="quality-box" class="quality-box" hidden>
+            <h4>Качество ответа</h4>
+            <div id="quality-confidence" class="quality-confidence"></div>
+            <div id="quality-grounding" class="quality-grounding"></div>
+            <ul id="quality-reasons" class="quality-reasons"></ul>
+        </div>
+        <div id="timeline-box" class="timeline-box" hidden>
+            <h4>Таймлайн по книге</h4>
+            <div id="timeline-list" class="timeline-list"></div>
+        </div>
+        <div id="graph-box" class="graph-box" hidden>
+            <h4>Граф персонажей</h4>
+            <div id="graph-nodes" class="graph-nodes"></div>
+            <div id="graph-edges" class="graph-edges"></div>
+        </div>
         <h4>Цитаты-основания</h4>
         <div id="citations-list" class="results-list"></div>
     </section>

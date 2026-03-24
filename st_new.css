@@ -1,0 +1,1501 @@
+/* style.css */
+
+/* Общие стили */
+body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    overflow: hidden;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Темы */
+body.white-theme {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+body.black-theme {
+    background-color: #1c1c1c; /* Тёмно-серый фон */
+    color: #e0e0e0; /* Светло-серый текст */
+}
+
+/* Стили скроллбара */
+body.white-theme::-webkit-scrollbar,
+body.black-theme::-webkit-scrollbar {
+    width: 12px;
+}
+
+body.white-theme::-webkit-scrollbar-track {
+    background: #e0e0e0;
+}
+
+body.black-theme::-webkit-scrollbar-track {
+    background: #2b2b2b; /* Более тёмный серый трек */
+}
+
+body.white-theme::-webkit-scrollbar-thumb {
+    background-color: #4444ff;
+    border-radius: 6px;
+    border: 3px solid #e0e0e0;
+}
+
+body.black-theme::-webkit-scrollbar-thumb {
+    background-color: #ffdd2d; /* Жёлтый цвет ползунка */
+    border-radius: 6px;
+    border: 3px solid #2b2b2b;
+}
+
+body.white-theme::-webkit-scrollbar-thumb:hover {
+    background-color: #636AE8;
+}
+
+body.black-theme::-webkit-scrollbar-thumb:hover {
+    background-color: #ffd700; /* Ярко-жёлтый при наведении */
+}
+
+/* Навигационная панель */
+.navbar {
+    display: flex;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: inherit;
+    color: inherit;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    box-sizing: border-box;
+}
+
+.navbar .logo {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.navbar .toggle-button {
+    margin-left: auto;
+    background-color: inherit;
+    color: inherit;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+body.white-theme .navbar .toggle-button {
+    background-color: #4444ff;
+    color: #ffffff;
+}
+
+body.black-theme .navbar .toggle-button {
+    background-color: #ffdd2d;
+    color: #1c1c1c;
+}
+
+body.white-theme .navbar .toggle-button:hover {
+    background-color: #636AE8;
+}
+
+body.black-theme .navbar .toggle-button:hover {
+    background-color: #ffd700;
+}
+
+.navbar .toggle-button:focus {
+    outline: none;
+}
+
+/* Контейнер */
+.container {
+    display: flex;
+    flex-direction: row;
+    margin-top: 80px; /* Отступ под навигационную панель */
+    height: calc(100vh - 80px); /* Высота контейнера */
+    box-sizing: border-box;
+}
+
+/* Основной контент */
+.main-content {
+    margin: 20px auto; /* Центрируем контент */
+    flex: 1;
+    overflow-y: auto;
+    position: relative;
+    padding-bottom: 100px; /* Отступ под нижнюю навигацию */
+    box-sizing: border-box;
+    max-width: 800px; /* Максимальная ширина для удобства чтения */
+    transition: margin-right 0.3s ease;
+}
+
+.main-content.shifted {
+    margin-right: 370px; /* Ширина правого сайдбара + отступ */
+}
+
+.main-content.full-width {
+    width: 100%;
+}
+
+/* Секция загрузки */
+.upload-section {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.upload-button {
+    padding: 15px 30px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background 0.3s;
+    margin-top: 20px;
+}
+
+body.white-theme .upload-button {
+    background-color: #4444ff;
+    color: #ffffff;
+}
+
+body.white-theme .upload-button:hover {
+    background-color: #636AE8;
+}
+
+body.black-theme .upload-button {
+    background-color: #ffdd2d;
+    color: #1c1c1c;
+}
+
+body.black-theme .upload-button:hover {
+    background-color: #ffd700;
+}
+
+.upload-button:focus {
+    outline: none;
+}
+
+/* Текстовый слой */
+.text-layer {
+    margin: 0 auto;
+    padding: 30px;
+    font-size: 1.2em;
+    line-height: 1.8;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    max-width: 800px;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-y: auto;
+    border-radius: 10px;
+}
+
+body.white-theme .text-layer {
+    background-color: #f0f0f0;
+    color: #000000;
+}
+
+body.black-theme .text-layer {
+    background-color: #2b2b2b; /* Тёмный серый фон */
+    color: #e0e0e0; /* Светло-серый текст */
+}
+
+/* Стилизация скроллбара в текстовом слое */
+.text-layer::-webkit-scrollbar {
+    width: 12px;
+}
+
+.text-layer::-webkit-scrollbar-track {
+    background: inherit;
+}
+
+body.white-theme .text-layer::-webkit-scrollbar-thumb {
+    background-color: #4444ff;
+    border-radius: 6px;
+    border: 3px solid #f0f0f0;
+}
+
+body.black-theme .text-layer::-webkit-scrollbar-thumb {
+    background-color: #ffdd2d;
+    border-radius: 6px;
+    border: 3px solid #2b2b2b;
+}
+
+body.white-theme .text-layer::-webkit-scrollbar-thumb:hover {
+    background-color: #636AE8;
+}
+
+body.black-theme .text-layer::-webkit-scrollbar-thumb:hover {
+    background-color: #ffd700;
+}
+
+/* Нижняя навигационная панель */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: inherit;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 30px;
+    z-index: 1000;
+    transition: margin-right 0.3s ease;
+    box-sizing: border-box;
+}
+
+.bottom-nav.shifted {
+    margin-right: 370px; /* Ширина правого сайдбара + отступ */
+}
+
+.bottom-nav .progress-display {
+    position: absolute;
+    left: 30px;
+    font-size: 1em;
+}
+
+.bottom-nav .nav-buttons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.bottom-nav button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background 0.3s;
+}
+
+body.white-theme .bottom-nav button {
+    background-color: #4444ff;
+    color: #ffffff;
+}
+
+body.white-theme .bottom-nav button:hover {
+    background-color: #636AE8;
+}
+
+body.black-theme .bottom-nav button {
+    background-color: #ffdd2d;
+    color: #1c1c1c;
+}
+
+body.black-theme .bottom-nav button:hover {
+    background-color: #ffd700;
+}
+
+.bottom-nav button:focus {
+    outline: none;
+}
+
+.bottom-nav span {
+    margin: 0 10px;
+}
+
+.bottom-nav input[type="number"] {
+    width: 60px;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+body.white-theme .bottom-nav input[type="number"] {
+    background-color: #f0f0f0;
+    color: #000000;
+}
+
+body.black-theme .bottom-nav input[type="number"] {
+    background-color: #3a3a3a; /* Более тёмный серый фон */
+    color: #ffffff;
+}
+
+/* Правый сайдбар */
+.right-panel {
+    position: fixed;
+    top: 80px; /* Начало под навигационной панелью */
+    right: -370px; /* Скрыт за пределами экрана */
+    width: 350px;
+    height: calc(100% - 80px); /* Высота контейнера */
+    background-color: inherit;
+    color: inherit;
+    overflow-y: auto;
+    transition: right 0.3s ease-in-out;
+    z-index: 1000;
+    box-sizing: border-box;
+}
+
+.right-panel.active {
+    right: 0; /* Появляется на экране */
+}
+
+#panel-content {
+    padding: 30px;
+}
+
+/* Заголовки в панели */
+.panel-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.panel-header h2 {
+    margin: 0;
+    font-size: 1.5em;
+    text-align: center;
+    color: inherit;
+}
+
+#panel-content h2 {
+    margin-top: 0;
+    text-align: center;
+    color: inherit;
+}
+
+#panel-content p {
+    text-align: center;
+    font-size: 1em;
+    margin-bottom: 20px;
+    color: inherit;
+}
+
+/* Списки меню и инструментов */
+.menu-list, .tool-list {
+    list-style: none;
+    padding: 0;
+}
+
+.menu-list li, .tool-list li {
+    margin: 15px 0;
+}
+
+.menu-list li button, .tool-list li button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 1em;
+    text-align: center;
+    transition: background 0.3s;
+}
+
+body.white-theme .menu-list li button,
+body.white-theme .tool-list li button {
+    background-color: #4444ff;
+    color: #ffffff;
+}
+
+body.white-theme .menu-list li button:hover,
+body.white-theme .tool-list li button:hover {
+    background-color: #636AE8;
+}
+
+body.black-theme .menu-list li button,
+body.black-theme .tool-list li button {
+    background-color: #ffdd2d;
+    color: #1c1c1c;
+}
+
+body.black-theme .menu-list li button:hover,
+body.black-theme .tool-list li button:hover {
+    background-color: #ffd700;
+}
+
+.menu-list li button:focus, .tool-list li button:focus {
+    outline: none;
+}
+
+.tool-list li p {
+    margin: 5px 0 0 0;
+    font-size: 0.9em;
+    color: inherit;
+}
+
+/* Панель настроек */
+.settings-panel label {
+    display: flex;
+    align-items: center;
+    margin: 10px 0 5px;
+    color: inherit;
+}
+
+.settings-panel label input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.settings-panel select,
+.settings-panel input[type="range"],
+.settings-panel input[type="color"],
+.settings-panel input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    background-color: inherit;
+    color: inherit;
+    border: 1px solid;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+body.white-theme .settings-panel select,
+body.white-theme .settings-panel input[type="range"],
+body.white-theme .settings-panel input[type="color"],
+body.white-theme .settings-panel input[type="text"] {
+    background-color: #f0f0f0;
+    border-color: #4444ff;
+}
+
+body.black-theme .settings-panel select,
+body.black-theme .settings-panel input[type="range"],
+body.black-theme .settings-panel input[type="color"],
+body.black-theme .settings-panel input[type="text"] {
+    background-color: #3a3a3a;
+    border-color: #ffdd2d;
+}
+
+/* Ползунок размера шрифта */
+.settings-panel input[type="range"] {
+    -webkit-appearance: none;
+    height: 8px;
+    border-radius: 5px;
+    outline: none;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.settings-panel input[type="range"]:hover {
+    opacity: 1;
+}
+
+.settings-panel input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: inherit;
+    cursor: pointer;
+}
+
+body.white-theme .settings-panel input[type="range"]::-webkit-slider-thumb {
+    background-color: #4444ff;
+}
+
+body.black-theme .settings-panel input[type="range"]::-webkit-slider-thumb {
+    background-color: #ffdd2d;
+}
+
+body.white-theme .settings-panel input[type="range"]::-webkit-slider-thumb:hover {
+    background-color: #636AE8;
+}
+
+body.black-theme .settings-panel input[type="range"]::-webkit-slider-thumb:hover {
+    background-color: #ffd700;
+}
+
+.settings-panel button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-top: 10px;
+    transition: background 0.3s;
+}
+
+body.white-theme .settings-panel button {
+    background-color: #4444ff;
+    color: #ffffff;
+}
+
+body.white-theme .settings-panel button:hover {
+    background-color: #636AE8;
+}
+
+body.black-theme .settings-panel button {
+    background-color: #ffdd2d;
+    color: #1c1c1c;
+}
+
+body.black-theme .settings-panel button:hover {
+    background-color: #ffd700;
+}
+
+.settings-panel button:focus {
+    outline: none;
+}
+
+/* Кнопка "Назад" */
+.back-button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    font-size: 1em;
+    transition: background 0.3s;
+    display: block;
+}
+
+body.white-theme .back-button {
+    background-color: #4444ff;
+    color: #ffffff;
+}
+
+body.white-theme .back-button:hover {
+    background-color: #636AE8;
+}
+
+body.black-theme .back-button {
+    background-color: #ffdd2d;
+    color: #1c1c1c;
+}
+
+body.black-theme .back-button:hover {
+    background-color: #ffd700;
+}
+
+.back-button:focus {
+    outline: none;
+}
+
+/* Содержимое AI инструментов */
+.ai-tools-content {
+    position: relative;
+}
+
+/* Контекстное меню */
+.context-menu {
+    position: absolute;
+    border: 1px solid;
+    border-radius: 5px;
+    display: none;
+    z-index: 1002;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+body.white-theme .context-menu {
+    background-color: #f0f0f0;
+    border-color: #4444ff;
+}
+
+body.black-theme .context-menu {
+    background-color: #3a3a3a;
+    border-color: #ffdd2d;
+}
+
+.context-menu button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    text-align: left;
+    color: inherit;
+}
+
+.context-menu button:hover {
+    background-color: inherit;
+    opacity: 0.8;
+}
+
+.context-menu button:focus {
+    outline: none;
+}
+
+/* Адаптивный дизайн */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .navbar .toggle-button {
+        margin-left: auto;
+    }
+
+    .right-panel {
+        width: 100%;
+        height: calc(100% - 80px);
+        right: -100%;
+    }
+
+    .right-panel.active {
+        right: 0;
+    }
+
+    .main-content {
+        margin-right: 0;
+    }
+
+    .chapters-list {
+        bottom: 100px;
+    }
+
+    .bottom-nav {
+        flex-wrap: wrap;
+    }
+
+    .bottom-nav .progress-display {
+        width: 100%;
+        margin-bottom: 10px;
+        position: static;
+        text-align: center;
+    }
+
+    .bottom-nav.shifted {
+        margin-right: 0;
+    }
+
+    .settings-panel input[type="range"] {
+        width: 100%;
+    }
+}
+
+/* Стили кнопок внутри AI инструментов */
+.ai-tools-content button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 1em;
+    text-align: center;
+    transition: background 0.3s;
+}
+
+/* Белая тема */
+body.white-theme .ai-tools-content button {
+    background-color: #4444ff;
+    color: #ffffff;
+}
+
+body.white-theme .ai-tools-content button:hover {
+    background-color: #636AE8;
+}
+
+/* Чёрная тема */
+body.black-theme .ai-tools-content button {
+    background-color: #ffdd2d;
+    color: #1c1c1c;
+}
+
+body.black-theme .ai-tools-content button:hover {
+    background-color: #ffd700;
+}
+
+/* Режим для слабовидящих */
+.accessibility-mode {
+    font-size: 1.5em;
+    line-height: 2;
+}
+
+/* Режим для дальтоников */
+.colorblind-mode {
+    filter: grayscale(100%);
+}
+
+
+
+/* Задний фон для меню */
+.right-panel {
+    position: fixed;
+    top: 80px; /* Начало под навигационной панелью */
+    right: -370px; /* Скрыт за пределами экрана */
+    width: 350px;
+    height: calc(100% - 151px); /* Высота контейнера */
+    background: linear-gradient(180deg, #2b2b2b, #1c1c1c); /* Градиентный фон */
+    color: #e0e0e0; /* Светло-серый текст */
+    overflow-y: auto;
+    transition: right 0.3s ease-in-out;
+    z-index: 1000;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3); /* Тень для разделения */
+    border-left: 1px solid #ffdd2d; /* Жёлтая граница */
+    border-radius: 10px 0 0 10px; /* Скругление левого края */
+    box-sizing: border-box;
+}
+
+.right-panel.active {
+    right: 0; /* Появляется на экране */
+}
+
+/* Содержимое меню */
+#panel-content {
+    padding: 20px 30px;
+}
+
+/* Заголовки в меню */
+#panel-content h2 {
+    margin: 0;
+    text-align: center;
+    font-size: 1.5em;
+    color: #ffdd2d; /* Жёлтый текст */
+}
+
+/* Кнопки меню */
+.menu-list button {
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 30px;
+    background-color: #ffdd2d; /* Жёлтая кнопка */
+    color: #1c1c1c; /* Тёмно-серый текст */
+    cursor: pointer;
+    font-size: 1em;
+    text-align: center;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.menu-list button:hover {
+    background-color: #ffd700; /* Ярко-жёлтая при наведении */
+    transform: scale(1.05); /* Лёгкое увеличение при наведении */
+}
+
+.menu-list button:focus {
+    outline: none;
+}
+
+
+/* Стили для списка глав */
+.chapters-list {
+    position: fixed; /* Фиксированное позиционирование относительно окна браузера */
+    top: 100px; /* Расположение от верхней части окна */
+    right: 20px; /* Расположение от правой части окна */
+    width: 300px; /* Ширина списка глав */
+    max-height: 70vh; /* Максимальная высота списка */
+    overflow-y: auto; /* Прокрутка по вертикали при переполнении */
+    background-color: rgba(255, 255, 255, 0.95); /* Белый фон с прозрачностью для светлой темы */
+    border: 1px solid #ccc; /* Светло-серая граница */
+    border-radius: 10px; /* Скругление углов */
+    padding: 15px; /* Внутренние отступы */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2); /* Тень для отделения от фона */
+    z-index: 1001; /* Поверх других элементов */
+    display: none; /* Изначально скрыто */
+    transition: opacity 0.3s ease, visibility 0.3s ease; /* Плавное появление и исчезновение */
+}
+
+/* Стили для списка глав в чёрной теме */
+body.black-theme .chapters-list {
+    background-color: rgba(50, 50, 50, 0.95); /* Тёмный фон */
+    color: #e0e0e0; /* Светло-серый текст */
+    border-color: #ffdd2d; /* Жёлтая граница */
+}
+
+/* Видимое состояние списка глав */
+.chapters-list.active {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Заголовок списка глав */
+.chapters-list h2 {
+    margin-top: 0;
+    text-align: center;
+    color: inherit;
+    font-size: 1.2em;
+}
+
+/* Стилизация списка и элементов списка */
+.chapters-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+}
+
+.chapters-list li {
+    margin-bottom: 10px;
+}
+
+/* Стилизация кнопок глав */
+.chapters-list li button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #ffdd2d; /* Жёлтая кнопка для чёрной темы */
+    color: #1c1c1c; /* Тёмно-серый текст */
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    text-align: left;
+    font-size: 1em;
+}
+
+body.white-theme .chapters-list li button {
+    background-color: #4444ff; /* Синий для светлой темы */
+    color: #ffffff; /* Белый текст */
+}
+
+body.white-theme .chapters-list li button:hover {
+    background-color: #636AE8;
+    transform: scale(1.05);
+}
+
+body.black-theme .chapters-list li button:hover {
+    background-color: #ffd700; /* Ярко-жёлтый при наведении */
+    transform: scale(1.05);
+}
+
+.chapters-list li button:focus {
+    outline: none;
+}
+
+body.colorblind-mode {
+    filter: contrast(1.5); /* Повышение контрастности */
+}
+
+body.colorblind-mode .navbar {
+    background-color: #222; /* Более контрастный фон */
+    color: #fff; /* Яркий текст */
+}
+
+body.colorblind-mode .content {
+    color: #333;
+    background-color: #eee; /* Светлый фон для текста */
+}
+
+body.colorblind-mode * {
+    outline: none; /* Избегаем добавления границ */
+    margin: 0; /* Убедитесь, что margin не сбивает расположение */
+}
+
+/* Светлая тема для right-panel */
+body.white-theme .right-panel {
+    background: linear-gradient(180deg, #f9f9f9, #e6e6e6); /* Градиент для светлой темы */
+    color: #333333; /* Тёмно-серый текст */
+    border-left: 1px solid #4444ff; /* Синяя граница */
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1); /* Лёгкая тень */
+}
+
+body.white-theme .right-panel.active {
+    right: 0; /* Появляется на экране */
+}
+
+/* Тёмная тема для right-panel */
+body.black-theme .right-panel {
+    background: linear-gradient(180deg, #2b2b2b, #1c1c1c); /* Градиент для тёмной темы */
+    color: #e0e0e0; /* Светло-серый текст */
+    border-left: 1px solid #ffdd2d; /* Жёлтая граница */
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3); /* Более заметная тень */
+}
+
+body.black-theme .right-panel.active {
+    right: 0; /* Появляется на экране */
+}
+
+.right-panel {
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Текст и кнопки в светлой теме */
+body.white-theme .right-panel h2,
+body.white-theme .right-panel p,
+body.white-theme .right-panel button {
+    color: #333333;
+}
+
+body.white-theme .right-panel button {
+    background-color: #4444ff;
+    color: #ffffff;
+}
+
+body.white-theme .right-panel button:hover {
+    background-color: #636AE8;
+}
+
+/* Текст и кнопки в тёмной теме */
+body.black-theme .right-panel h2,
+body.black-theme .right-panel p,
+body.black-theme .right-panel button {
+    color: #e0e0e0;
+}
+
+body.black-theme .right-panel button {
+    background-color: #ffdd2d;
+    color: #1c1c1c;
+}
+
+body.black-theme .right-panel button:hover {
+    background-color: #ffd700;
+}
+
+/* Светлая тема для tool-content */
+body.white-theme .tool-content {
+    background: linear-gradient(180deg, #f9f9f9, #e6e6e6); /* Градиент для светлой темы */
+    color: #333333; /* Тёмно-серый текст */
+    border: 1px solid #4444ff; /* Синяя граница */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Лёгкая тень */
+    border-radius: 10px; /* Скругление углов */
+    padding: 20px;
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Тёмная тема для tool-content */
+body.black-theme .tool-content {
+    background: linear-gradient(180deg, #2b2b2b, #1c1c1c); /* Градиент для тёмной темы */
+    color: #e0e0e0; /* Светло-серый текст */
+    border: 1px solid #ffdd2d; /* Жёлтая граница */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Более заметная тень */
+    border-radius: 10px; /* Скругление углов */
+    padding: 20px;
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Светлая тема: стили текста и кнопок */
+body.white-theme .tool-content h2,
+body.white-theme .tool-content p,
+body.white-theme .tool-content button {
+    color: #333333;
+}
+
+body.white-theme .tool-content button {
+    background-color: #4444ff;
+    color: #ffffff;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+body.white-theme .tool-content button:hover {
+    background-color: #636AE8;
+    transform: scale(1.05); /* Лёгкое увеличение при наведении */
+}
+
+/* Тёмная тема: стили текста и кнопок */
+body.black-theme .tool-content h2,
+body.black-theme .tool-content p,
+body.black-theme .tool-content button {
+    color: #e0e0e0;
+}
+
+body.black-theme .tool-content button {
+    background-color: #ffdd2d;
+    color: #1c1c1c;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+body.black-theme .tool-content button:hover {
+    background-color: #ffd700;
+    transform: scale(1.05); /* Лёгкое увеличение при наведении */
+}
+
+
+/* Светлая тема для form-group */
+body.white-theme .form-group {
+    background: linear-gradient(180deg, #f9f9f9, #e6e6e6); /* Градиент для светлой темы */
+    color: #333333; /* Тёмно-серый текст */
+    border: 1px solid #4444ff; /* Синяя граница */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Лёгкая тень */
+    border-radius: 10px; /* Скругление углов */
+    padding: 15px;
+    margin-bottom: 20px;
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Тёмная тема для form-group */
+body.black-theme .form-group {
+    background: linear-gradient(180deg, #2b2b2b, #1c1c1c); /* Градиент для тёмной темы */
+    color: #e0e0e0; /* Светло-серый текст */
+    border: 1px solid #ffdd2d; /* Жёлтая граница */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Более заметная тень */
+    border-radius: 10px; /* Скругление углов */
+    padding: 15px;
+    margin-bottom: 20px;
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Стили для полей ввода и текста в form-group */
+/* Светлая тема */
+body.white-theme .form-group label,
+body.white-theme .form-group input,
+body.white-theme .form-group select,
+body.white-theme .form-group textarea {
+    color: #333333; /* Тёмно-серый текст */
+}
+
+body.white-theme .form-group input,
+body.white-theme .form-group select,
+body.white-theme .form-group textarea {
+    background-color: #ffffff;
+    border: 1px solid #4444ff; /* Синяя граница */
+    border-radius: 5px;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+body.white-theme .form-group input:focus,
+body.white-theme .form-group select:focus,
+body.white-theme .form-group textarea:focus {
+    border-color: #636AE8; /* Ярко-синяя граница при фокусе */
+    outline: none;
+}
+
+/* Тёмная тема */
+body.black-theme .form-group label,
+body.black-theme .form-group input,
+body.black-theme .form-group select,
+body.black-theme .form-group textarea {
+    color: #e0e0e0; /* Светло-серый текст */
+}
+
+body.black-theme .form-group input,
+body.black-theme .form-group select,
+body.black-theme .form-group textarea {
+    background-color: #1c1c1c;
+    border: 1px solid #ffdd2d; /* Жёлтая граница */
+    border-radius: 5px;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+body.black-theme .form-group input:focus,
+body.black-theme .form-group select:focus,
+body.black-theme .form-group textarea:focus {
+    border-color: #ffd700; /* Ярко-жёлтая граница при фокусе */
+    outline: none;
+}
+
+/* Стили кнопок внутри form-group */
+/* Светлая тема */
+body.white-theme .form-group button {
+    background-color: #4444ff;
+    color: #ffffff;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+body.white-theme .form-group button:hover {
+    background-color: #636AE8;
+    transform: scale(1.05); /* Лёгкое увеличение при наведении */
+}
+
+/* Тёмная тема */
+body.black-theme .form-group button {
+    background-color: #ffdd2d;
+    color: #1c1c1c;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+body.black-theme .form-group button:hover {
+    background-color: #ffd700;
+    transform: scale(1.05); /* Лёгкое увеличение при наведении */
+}
+
+/* Светлая тема для summary-result */
+body.white-theme .summary-result {
+    background: linear-gradient(180deg, #f9f9f9, #e6e6e6); /* Градиент для светлой темы */
+    color: #333333; /* Тёмно-серый текст */
+    border: 1px solid #4444ff; /* Синяя граница */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Лёгкая тень */
+    border-radius: 10px; /* Скругление углов */
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    font-size: 1em;
+    line-height: 1.6;
+    overflow: auto;
+}
+
+/* Тёмная тема для summary-result */
+body.black-theme .summary-result {
+    background: linear-gradient(180deg, #2b2b2b, #1c1c1c); /* Градиент для тёмной темы */
+    color: #e0e0e0; /* Светло-серый текст */
+    border: 1px solid #ffdd2d; /* Жёлтая граница */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Более заметная тень */
+    border-radius: 10px; /* Скругление углов */
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    font-size: 1em;
+    line-height: 1.6;
+    overflow: auto;
+}
+
+/* Стили текста внутри summary-result */
+/* Светлая тема */
+body.white-theme .summary-result h3,
+body.white-theme .summary-result p,
+body.white-theme .summary-result li {
+    color: #333333; /* Тёмно-серый текст */
+}
+
+/* Тёмная тема */
+body.black-theme .summary-result h3,
+body.black-theme .summary-result p,
+body.black-theme .summary-result li {
+    color: #e0e0e0; /* Светло-серый текст */
+}
+
+/* Стили ссылок в summary-result */
+/* Светлая тема */
+body.white-theme .summary-result a {
+    color: #4444ff; /* Синий цвет ссылок */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+body.white-theme .summary-result a:hover {
+    color: #636AE8; /* Ярко-синий при наведении */
+}
+
+/* Тёмная тема */
+body.black-theme .summary-result a {
+    color: #ffdd2d; /* Жёлтый цвет ссылок */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+body.black-theme .summary-result a:hover {
+    color: #ffd700; /* Ярко-жёлтый при наведении */
+}
+
+/* Прокрутка внутри summary-result */
+.summary-result::-webkit-scrollbar {
+    width: 10px;
+}
+
+body.white-theme .summary-result::-webkit-scrollbar-track {
+    background: #e0e0e0;
+}
+
+body.black-theme .summary-result::-webkit-scrollbar-track {
+    background: #2b2b2b;
+}
+
+body.white-theme .summary-result::-webkit-scrollbar-thumb {
+    background-color: #4444ff;
+    border-radius: 5px;
+    border: 2px solid #e0e0e0;
+}
+
+body.black-theme .summary-result::-webkit-scrollbar-thumb {
+    background-color: #ffdd2d;
+    border-radius: 5px;
+    border: 2px solid #2b2b2b;
+}
+
+body.white-theme .summary-result::-webkit-scrollbar-thumb:hover {
+    background-color: #636AE8;
+}
+
+body.black-theme .summary-result::-webkit-scrollbar-thumb:hover {
+    background-color: #ffd700;
+}
+
+/* Светлая тема для visualization-tool */
+body.white-theme .visualization-tool {
+    background: linear-gradient(180deg, #f9f9f9, #e6e6e6); /* Градиент для светлой темы */
+    color: #333333; /* Тёмно-серый текст */
+    border: 1px solid #4444ff; /* Синяя граница */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Лёгкая тень */
+    border-radius: 10px; /* Скругление углов */
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    overflow: hidden;
+}
+
+/* Тёмная тема для visualization-tool */
+body.black-theme .visualization-tool {
+    background: linear-gradient(180deg, #2b2b2b, #1c1c1c); /* Градиент для тёмной темы */
+    color: #e0e0e0; /* Светло-серый текст */
+    border: 1px solid #ffdd2d; /* Жёлтая граница */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Более заметная тень */
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    overflow: hidden;
+}
+
+/* Светлая тема для chat-window */
+body.white-theme .chat-window {
+    background: linear-gradient(180deg, #ffffff, #f2f2f2); /* Градиент для светлой темы */
+    color: #333333; /* Тёмно-серый текст */
+    border: 1px solid #4444ff; /* Синяя граница */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Лёгкая тень */
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+    max-height: 400px; /* Ограниченная высота */
+    overflow-y: auto;
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Тёмная тема для chat-window */
+body.black-theme .chat-window {
+    background: linear-gradient(180deg, #2b2b2b, #1c1c1c); /* Градиент для тёмной темы */
+    color: #e0e0e0; /* Светло-серый текст */
+    border: 1px solid #ffdd2d; /* Жёлтая граница */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Более заметная тень */
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Прокрутка в chat-window */
+.chat-window::-webkit-scrollbar {
+    width: 10px;
+}
+
+body.white-theme .chat-window::-webkit-scrollbar-track {
+    background: #e0e0e0;
+}
+
+body.black-theme .chat-window::-webkit-scrollbar-track {
+    background: #2b2b2b;
+}
+
+body.white-theme .chat-window::-webkit-scrollbar-thumb {
+    background-color: #4444ff;
+    border-radius: 5px;
+    border: 2px solid #e0e0e0;
+}
+
+body.black-theme .chat-window::-webkit-scrollbar-thumb {
+    background-color: #ffdd2d;
+    border-radius: 5px;
+    border: 2px solid #2b2b2b;
+}
+
+body.white-theme .chat-window::-webkit-scrollbar-thumb:hover {
+    background-color: #636AE8;
+}
+
+body.black-theme .chat-window::-webkit-scrollbar-thumb:hover {
+    background-color: #ffd700;
+}
+
+/* Светлая тема для input-container */
+body.white-theme .input-container {
+    background: #ffffff; /* Белый фон */
+    border: 1px solid #4444ff; /* Синяя граница */
+    border-radius: 10px; /* Скругление углов */
+    padding: 10px;
+    margin-top: 10px;
+    display: flex;
+    gap: 10px; /* Промежутки между элементами */
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+/* Тёмная тема для input-container */
+body.black-theme .input-container {
+    background: #1c1c1c; /* Чёрный фон */
+    border: 1px solid #ffdd2d; /* Жёлтая граница */
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+/* Стили для полей ввода и кнопок внутри input-container */
+/* Светлая тема */
+body.white-theme .input-container input,
+body.white-theme .input-container button {
+    background-color: #f2f2f2; /* Светлый фон для полей */
+    color: #333333; /* Тёмно-серый текст */
+    border: 1px solid #4444ff; /* Синяя граница */
+    border-radius: 5px;
+    padding: 8px 12px;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+body.white-theme .input-container button {
+    background-color: #4444ff; /* Синий фон кнопки */
+    color: #ffffff; /* Белый текст */
+    cursor: pointer;
+}
+
+body.white-theme .input-container button:hover {
+    background-color: #636AE8; /* Ярко-синий при наведении */
+}
+
+/* Тёмная тема */
+body.black-theme .input-container input,
+body.black-theme .input-container button {
+    background-color: #2b2b2b; /* Тёмный фон для полей */
+    color: #e0e0e0; /* Светло-серый текст */
+    border: 1px solid #ffdd2d; /* Жёлтая граница */
+    border-radius: 5px;
+    padding: 8px 12px;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+body.black-theme .input-container button {
+    background-color: #ffdd2d; /* Жёлтый фон кнопки */
+    color: #1c1c1c; /* Чёрный текст */
+    cursor: pointer;
+}
+
+body.black-theme .input-container button:hover {
+    background-color: #ffd700; /* Ярко-жёлтый при наведении */
+}
+
+/* Светлая тема для #user-input */
+body.white-theme #user-input {
+    background-color: #ffffff; /* Белый фон */
+    color: #333333; /* Тёмно-серый текст */
+    border: 1px solid #4444ff; /* Синяя граница */
+    border-radius: 10px; /* Скругление углов */
+    padding: 10px 15px;
+    font-size: 1em;
+    width: 100%; /* Растягиваем на всю доступную ширину */
+    box-sizing: border-box; /* Учитываем padding в ширине */
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Тёмная тема для #user-input */
+body.black-theme #user-input {
+    background-color: #1c1c1c; /* Тёмно-серый фон */
+    color: #e0e0e0; /* Светло-серый текст */
+    border: 1px solid #ffdd2d; /* Жёлтая граница */
+    border-radius: 10px;
+    padding: 10px 15px;
+    font-size: 1em;
+    width: 100%; /* Растягиваем на всю доступную ширину */
+    box-sizing: border-box;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Стили для фокуса */
+body.white-theme #user-input:focus {
+    border-color: #636AE8; /* Ярко-синяя граница при фокусе */
+    background-color: #f9f9f9; /* Светло-серый фон */
+    outline: none; /* Убираем стандартное обрамление */
+}
+
+body.black-theme #user-input:focus {
+    border-color: #ffd700; /* Ярко-жёлтая граница при фокусе */
+    background-color: #2b2b2b; /* Более светлый тёмно-серый фон */
+    outline: none;
+}
+
+/* Плейсхолдер */
+body.white-theme #user-input::placeholder {
+    color: #999999; /* Светло-серый текст для плейсхолдера */
+}
+
+body.black-theme #user-input::placeholder {
+    color: #cccccc; /* Более светлый серый текст для плейсхолдера */
+}
+
+/* Анимация при вводе текста */
+#user-input:focus {
+    transition: all 0.3s ease;
+}
+
+/* Светлая тема для pannel-header */
+body.white-theme .pannel-header {
+    background-color: #f9f9f9; /* Светлый фон */
+    color: #333333; /* Тёмно-серый текст */
+    border-bottom: 1px solid #4444ff; /* Синяя нижняя граница */
+    padding: 15px 20px;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 10px 10px 0 0; /* Скруглённые верхние углы */
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Тёмная тема для pannel-header */
+body.black-theme .pannel-header {
+    background-color: #1c1c1c; /* Тёмный фон */
+    color: #ffdd2d; /* Жёлтый текст */
+    border-bottom: 1px solid #ffdd2d; /* Жёлтая нижняя граница */
+    padding: 15px 20px;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 10px 10px 0 0; /* Скруглённые верхние углы */
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Дополнительный стиль для текста при наведении */
+body.white-theme .pannel-header:hover {
+    background-color: #e6e6e6; /* Лёгкое затемнение */
+    color: #4444ff; /* Синий текст при наведении */
+}
+
+body.black-theme .pannel-header:hover {
+    background-color: #2b2b2b; /* Лёгкое осветление фона */
+    color: #ffd700; /* Ярко-жёлтый текст при наведении */
+}
+
+/* Светлая тема для #panel-content h2 */
+body.white-theme #panel-content h2 {
+    color: #333333; /* Тёмно-серый текст */
+    padding: 10px 15px;
+    font-size: 1.8em;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 5px; /* Скругление углов */
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Тёмная тема для #panel-content h2 */
+body.black-theme #panel-content h2 {
+    color: #ffdd2d; /* Жёлтый текст */
+    padding: 10px 15px;
+    font-size: 1.8em;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 5px; /* Скругление углов */
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Светлая тема для .visualization-container label */
+body.white-theme .visualization-container label {
+
+    color: #333333; /* Тёмно-серый текст */
+
+    padding: 8px 12px;
+    font-size: 1.1em;
+    font-weight: 500;
+    display: inline-block;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Тёмная тема для .visualization-container label */
+body.black-theme .visualization-container label {
+
+    color: #ffdd2d; /* Жёлтый текст */
+    padding: 8px 12px;
+    font-size: 1.1em;
+    font-weight: 500;
+    display: inline-block;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+
+
+

@@ -152,10 +152,141 @@
     </div>
 
     <!-- Скрипты -->
-    <script type="module" src="scripts/main.js?v=offline1"></script>
-    <script type="module" src="scripts/menu.js?v=offline1"></script>
-    <script type="module" src="scripts/settings.js?v=offline1"></script>
-    <script type="module" src="scripts/contextMenu.js?v=offline1"></script>
-    <script src="scripts/aiTools.js?v=offline1"></script>
+    <script src="scripts/main.js?v=20260309b" type="module"></script>
+    <script type="module" src="scripts/menu.js?v=20260309b"></script>
+    <script src="scripts/auth.js?v=20260309b"></script>
+    <script type="module" src="scripts/settings.js?v=20260309b"></script>
+    <script type="module" src="scripts/contextMenu.js?v=20260309b"></script>
+    <!-- Добавляем перед закрывающим тегом body -->
+    <script src="scripts/aiTools.js?v=20260309c"></script>
+    <script>
+        (function () {
+            const rawHost = window.location.hostname || '127.0.0.1';
+            const API_HOST = (rawHost === '0.0.0.0' || rawHost === '[::]') ? '127.0.0.1' : rawHost;
+            const API_BASE_CANDIDATES = Array.from(
+                new Set([
+                    `http://${API_HOST}:8000`,
+                    'http://127.0.0.1:8000',
+                    'http://localhost:8000',
+                ]),
+            );
+            let apiBaseCache = null;
+
+            function ensureToken() {
+                const existing = localStorage.getItem('authToken');
+                if (existing) return existing;
+                const fallback = 'auth-disabled';
+                localStorage.setItem('authToken', fallback);
+                return fallback;
+            }
+
+            function updateProgress(text, percent) {
+                const wrap = document.querySelector('.upload-progress');
+                const fill = document.querySelector('.progress-fill');
+                const label = document.querySelector('.progress-text');
+                if (wrap) wrap.style.display = 'block';
+                if (fill && Number.isFinite(percent)) fill.style.width = `${Math.max(0, Math.min(100, percent))}%`;
+                if (label) label.textContent = text;
+            }
+
+            async function apiFetch(path, options = {}) {
+                const candidates = apiBaseCache
+                    ? [apiBaseCache, ...API_BASE_CANDIDATES.filter((item) => item !== apiBaseCache)]
+                    : API_BASE_CANDIDATES;
+
+                let lastError = null;
+                for (const base of candidates) {
+                    try {
+                        const response = await fetch(`${base}${path}`, options);
+                        apiBaseCache = base;
+                        return response;
+                    } catch (error) {
+                        lastError = error;
+                    }
+                }
+
+                throw lastError || new Error('Не удалось подключиться к API');
+            }
+
+            async function fallbackUpload(file) {
+                if (!file) return;
+                const ext = (file.name.split('.').pop() || '').toLowerCase();
+                if (!['txt', 'fb2'].includes(ext)) {
+                    updateProgress('Поддерживаются только .txt и .fb2', 0);
+                    return;
+                }
+
+                updateProgress(`Подготовка: ${file.name}`, 10);
+                const fd = new FormData();
+                fd.append('file', file);
+
+                try {
+                    updateProgress('Загрузка...', 40);
+                    const response = await apiFetch('/upload', {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${ensureToken()}` },
+                        body: fd
+                    });
+                    const data = await response.json().catch(() => ({}));
+                    if (!response.ok) {
+                        throw new Error(data.detail || 'Ошибка загрузки');
+                    }
+                    updateProgress('100% — книга загружена', 100);
+                    setTimeout(() => window.location.reload(), 500);
+                } catch (error) {
+                    if (error instanceof TypeError) {
+                        updateProgress('Нет подключения к backend (порт 8000)', 0);
+                    } else {
+                        updateProgress(error.message || 'Ошибка загрузки', 0);
+                    }
+                }
+            }
+
+            function initFallback() {
+                const input = document.getElementById('file-input');
+                const uploadNowBtn = document.getElementById('uploadNowBtn');
+                const dropZone = document.getElementById('drop-zone');
+
+                if (!input || !uploadNowBtn || !dropZone) return;
+
+                if (!window.__bookverseOnFileChange) {
+                    window.__bookverseOnFileChange = (event) => {
+                        const file = event?.target?.files?.[0];
+                        fallbackUpload(file);
+                    };
+                }
+
+                if (!uploadNowBtn.dataset.fallbackBound) {
+                    uploadNowBtn.dataset.fallbackBound = 'true';
+                    uploadNowBtn.addEventListener('click', () => {
+                        fallbackUpload(input.files?.[0]);
+                    });
+                }
+
+                if (!dropZone.dataset.fallbackBound) {
+                    dropZone.dataset.fallbackBound = 'true';
+                    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach((eventName) => {
+                        dropZone.addEventListener(eventName, (event) => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        });
+                    });
+                    ['dragenter', 'dragover'].forEach((eventName) => {
+                        dropZone.addEventListener(eventName, () => dropZone.classList.add('drag-over'));
+                    });
+                    ['dragleave', 'drop'].forEach((eventName) => {
+                        dropZone.addEventListener(eventName, () => dropZone.classList.remove('drag-over'));
+                    });
+                    dropZone.addEventListener('drop', (event) => {
+                        fallbackUpload(event.dataTransfer?.files?.[0]);
+                    });
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(initFallback, 250);
+            });
+        })();
+    </script>
 </body>
 </html> 

@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <title>BookVerse - Чтение</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=20260318b">
 </head>
-<body class="white-theme">
+<body class="white-theme reader-page">
     <!-- Навигация -->
     <nav class="main-nav">
         <div class="nav-brand">
@@ -14,22 +14,35 @@
         </div>
         
         <div class="breadcrumbs">
-            <span id="breadcrumb-chapter" class="breadcrumb-item">Глава: Не выбрано</span>
-            <span id="breadcrumb-page" class="breadcrumb-item">Страница: 1</span>
+            <span id="breadcrumb-chapter" class="breadcrumb-item">Глава не выбрана</span>
         </div>
         
         <div class="nav-actions">
+            <button id="toggle-reader-search" class="nav-btn highlight">🔎 Поиск</button>
             <button id="toggle-chapters" class="nav-btn highlight">📑 Главы</button>
             <button id="menuButton" class="nav-btn highlight">☰ Меню</button>
         </div>
     </nav>
 
+    <div id="reader-search-panel" class="reader-search-panel" aria-live="polite">
+        <div class="reader-search-row">
+            <input id="reader-search-input" type="text" placeholder="Строгий поиск по символам в книге..." />
+            <button id="reader-search-run" type="button">Найти</button>
+            <button id="reader-search-prev" type="button" title="Предыдущее совпадение">←</button>
+            <button id="reader-search-next" type="button" title="Следующее совпадение">→</button>
+            <button id="reader-search-close" type="button" class="reader-search-close" title="Закрыть">✕</button>
+        </div>
+        <div class="reader-search-options">
+            <label class="reader-search-option" for="reader-search-whole-word">
+                <input id="reader-search-whole-word" type="checkbox" />
+                <span>Только целые слова</span>
+            </label>
+        </div>
+        <div id="reader-search-status" class="reader-search-status"></div>
+    </div>
+
     <!-- Основной контент -->
     <main class="reader-content">
-        <header>
-            <h1>BookVerse</h1>
-        </header>
-
         <!-- Текстовый слой -->
         <div id="text-layer" class="text-layer">
             <div id="page-content" class="page-content">
@@ -46,6 +59,7 @@
                 <span id="page-count">0</span>
             </div>
             <button id="next-page" class="nav-btn">▶</button>
+            <div id="search-hit-strip" class="search-hit-strip" aria-hidden="true"></div>
         </div>
     </main>
 
@@ -53,6 +67,7 @@
     <div class="reading-percentage">
         Прочитано: <span id="progress-percentage">0%</span>
     </div>
+    <div id="chapter-jump-hint" class="chapter-jump-hint" aria-live="polite"></div>
 
     <!-- Боковая панель -->
     <aside class="side-panel" id="right-panel">
@@ -106,16 +121,20 @@
             <h3>Содержание</h3>
             <button class="nav-btn" id="close-chapters">✕</button>
         </div>
+        <div class="chapters-actions">
+            <button id="prev-chapter" class="nav-btn chapter-action-btn">← Пред. глава</button>
+            <button id="next-chapter" class="nav-btn chapter-action-btn">След. глава →</button>
+        </div>
         <div id="chapters-list" class="chapters-list">
             <!-- Главы будут добавлены через JavaScript -->
         </div>
     </aside>
 
     <!-- Скрипты -->
-    <script src="scripts/aiTools.js?v=offline1"></script>
-    <script type="module" src="scripts/menu.js?v=offline1"></script>
-    <script type="module" src="scripts/settings.js?v=offline1"></script>
-    <script type="module" src="scripts/contextMenu.js?v=offline1"></script>
-    <script type="module" src="scripts/reader.js?v=offline1"></script>
+    <script src="scripts/aiTools.js?v=20260318a"></script>
+    <script type="module" src="scripts/menu.js?v=20260309b"></script>
+    <script type="module" src="scripts/settings.js?v=20260315c"></script>
+    <script type="module" src="scripts/contextMenu.js?v=20260309b"></script>
+    <script type="module" src="scripts/reader.js?v=20260319b"></script>
 </body>
 </html> 

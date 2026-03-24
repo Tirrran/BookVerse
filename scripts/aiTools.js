@@ -1,8 +1,8 @@
 // scripts/aiTools.js
 
-const TOOL_VERSION = "20260309c";
+const TOOL_VERSION = "20260323i";
 
-// Алгоритмический набор инструментов без внешних AI API.
+// Локальный гибридный набор инструментов без внешних AI API.
 window.aiTools = {
     book_search: {
         icon: "🔎",
@@ -21,6 +21,24 @@ window.aiTools = {
         script: "tools/bookai.js",
         styles: "tools/bookai.css",
         initHook: "__initBookAiTool",
+    },
+    summary: {
+        icon: "📝",
+        title: "Конспект книги",
+        description: "Краткий пересказ с цитатами из текста",
+        html: "tools/summary.html",
+        script: "tools/summary.js",
+        styles: "tools/summary.css",
+        initHook: "__initSummaryTool",
+    },
+    quiz: {
+        icon: "🧩",
+        title: "Викторина",
+        description: "Тестовые вопросы по содержанию книги",
+        html: "tools/quiz.html",
+        script: "tools/quiz.js",
+        styles: "tools/quiz.css",
+        initHook: "__initQuizTool",
     },
 };
 
@@ -56,7 +74,7 @@ window.showToolList = function showToolList() {
         </div>
         <div class="tool-container">
             <p style="margin: 0 0 12px; color: #9ca3af; font-size: 13px;">
-                Алгоритмический режим: без внешних AI/API, только работа по загруженным текстам.
+                Гибридный режим: локальные алгоритмы + локальная LLM (Ollama), без внешних AI/API.
             </p>
             <div class="tools-grid">${cardsHtml}</div>
         </div>
@@ -120,8 +138,8 @@ window.selectTool = async function selectTool(toolName) {
             await new Promise((resolve, reject) => {
                 const scriptTag = document.createElement("script");
                 scriptTag.src = withVersion(tool.script);
-                // Инструменты грузим как ESM-модули, чтобы можно было импортировать локальное ядро.
-                scriptTag.type = "module";
+                // В классическом режиме скрипт выполняется при каждом повторном открытии инструмента.
+                scriptTag.type = "text/javascript";
                 scriptTag.dataset.toolAsset = "true";
                 scriptTag.onload = () => resolve();
                 scriptTag.onerror = () => reject(new Error("Не удалось загрузить JS инструмента"));
